@@ -1,7 +1,7 @@
 ---
 title: "Mental Health and Poverty"
 author: "Sunny Lee"
-output: pdf_document
+output: html_document
 date: "2025-01-25"
 ---
 
