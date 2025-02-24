@@ -696,7 +696,7 @@ h243_selected
 
 
 ```{r}
-#| label: Tables 
+#| label: Tables of categorical variables 
 
 #Making tables for all categorical variables 
 table(h243_selected$POVCAT22)
@@ -713,19 +713,118 @@ table(h243_selected$EMPST31)
 
 #Calculate the mean and standard deviation
 summary(h243_selected[, c("RXEXP22", "RXSLF22", "AGE31X")])
+```
+
+```{r cache = TRUE}
+
+#| label: Prevent rerunning of chunks
+
+h243_selected <- h243_selected %>%
+  filter(!is.na(MNHLTH31) & !is.na(POVCAT22))  # Example of cleaning
+
+#This line to help with rerunning the large set-up chunk of code everytime I run ggplot that relies on setting up the data
+```
+
+```{r}
+#| label: Visualization of different variables
+
+library(ggplot2)
+
+#Mental health by poverty level
+ggplot(h243_selected, aes(x = MNHLTH31, fill = POVCAT22)) +
+    geom_bar(position = "fill") +
+    labs(title = "Perceived Mental Health by Poverty Level", x = "Mental Health Status", y = "Proportion") +
+    scale_y_continuous(labels = scales::percent) +
+    theme_minimal()
+
+#Insurance status and medication expenditure disparities
 
 ```
 
 ```{r}
-#| label: Visualization of Distribution of prescription expenditure across poverty levels 
+#|label: New tibble for psychiatric illnesses
 
-library(ggplot2)
+library(tidyverse)
+library(readr)
+library(dplyr)
 
-ggplot(h243_selected, aes(x = POVCAT22, y = RXEXP22)) + 
-    geom_boxplot() + 
-    labs(title = "Prescription Expenditure by Poverty Level", x = "Poverty Level", y = "Total Prescription Expenditure")
+# Load h243.dat and select needed columns
+h243_psych <- read_fwf("h243.dat", col_positions = fwf_positions(start = pos_start, end = pos_end,col_names = var_names),col_types = var_types) 
+  
+# Select only the variables of interest
+psych_vars <- c("DUPERSID", "MNHLTH31", "RXEXP22", "RXSLF22","AGE31X", "RACEV1X", "RACEV2X", "SEX", "INSURC22", "EMPST31", "EDUCYR", "POVCAT22")
+
+# Create a new dataframe with only the selected columns
+h243_psych <- h243 %>% select(all_of(psych_vars))
 ```
 
+
+```{r}
+#|label: Set up for h241 file
+
+pos_start_241 <- c(
+1, 8, 11, 21, 23, 36, 38, 39, 42, 44, 
+46, 48, 50, 52, 54, 56, 58, 60, 61, 64, 
+72, 78, 84, 90, 96, 97, 98, 99, 100, 101, 
+102, 115, 119)
+
+
+pos_end_241 <- c(
+7, 10, 20, 22, 35, 37, 38, 41, 43, 45, 
+47, 49, 51, 53, 55, 57, 59, 60, 63, 71, 
+77, 83, 89, 95, 96, 97, 98, 99, 100, 101, 
+114, 118, 119)
+
+
+var_names_241 <- c("DUID", "PID", "DUPERSID", "CONDN", "CONDIDX", "PANEL", "CONDRN", "AGEDIAG", "CRND1", "CRND2", "CRND3", "CRND4", "CRND5", "CRND6", "CRND7", "CRND8", "CRND9", "INJURY", "ACCDNWRK", "ICD10CDX", "CCSR1X", "CCSR2X", "CCSR3X", "CCSR4X", "HHCOND", "IPCOND", "OPCOND", "OBCOND", "ERCOND", "RXCOND", "PERWT22F", "VARSTR", "VARPSU")
+
+
+var_types_241 <- c(
+"c", "n", "c", "n", "c", "n", "n", "n", "n", "n", 
+"n", "n", "n", "n", "n", "n", "n", "n", "n", "c", 
+"c", "c", "c", "c", "n", "n", "n", "n", "n", "n", 
+"n", "n", "n")
+
+
+var_types_241 <- setNames(var_types_241, var_names_241)
+
+h241 <- read_fwf("h241.dat", col_positions = fwf_positions(start = pos_start_241, end = pos_end_241, col_names = var_names_241), col_types = var_types_241)   
+
+```
+
+```{r}
+#|label: Making a merged dataset with h243 (Full Year Consolidated File) and h241 (Medical Conditions File)
+
+# Load h241.dat and select relevant columns
+
+h241_psych <- h241 %>% 
+  select(DUPERSID, ICD10CDX, RXCOND) %>% 
+  filter(RXCOND == 1) # Keep only rows where RXCOND is 1
+
+# Define psychiatric illness codes to filter
+psychiatric_codes <- c("F03", "F10", "F20", "F31", "F32", "F34", "F39", "F41", "F42", "F43", "F80", "F84", "F90", "F99")
+
+# Filter h241 for individuals with psychiatric illness
+h241_filtered <- h241_psych %>%
+  filter(ICD10CDX %in% psychiatric_codes)
+
+# Merge datasets on DUPERSID (keeping only individuals with psychiatric illness)
+h241h243_merged <- h241_filtered %>%
+  inner_join(h243_psych, by = "DUPERSID")
+
+# View the final dataset
+print(h241h243_merged)
+
+write_csv(h241h243_merged, "h241+h243_filtered.csv")
+```
+
+```{r}
+#|label: Visualization of merged data 
+
+ggplot(h241h243_merged, aes(x = POVCAT22, y = RXEXP22)) + geom_boxplot() + 
+  labs(title = "Prescription Expenditure by Poverty Level", x = "Poverty Level", y = "Total Prescription Expenditure")
+
+```
 
 
 You can add options to executable code like this
