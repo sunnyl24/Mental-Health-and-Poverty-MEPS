@@ -22,7 +22,7 @@ library(readr) #Run for every new R session
 #Imports the entire dataset 
 #Define start and end positions to read fixed-width file  
 
-ppos_start <- c(
+pos_start <- c(
 1, 8, 11, 21, 23, 27, 29, 31, 33, 35, 
 37, 39, 41, 43, 45, 47, 49, 52, 54, 56, 
 58, 60, 62, 64, 66, 67, 69, 71, 73, 75, 
@@ -605,27 +605,21 @@ var_types <- c(
 var_types <- setNames(var_types, var_names)
 ```
 
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 
 #| label: Import the file
 
 #Importing ASCII file
-h233 <- read_fwf("h243.dat",
-     col_positions =                       
-         fwf_positions(                    
-             start = pos_start,            
-                 end   = pos_end,          
-                 col_names = var_names),   
-         col_types = var_types) 
+h243 <- read_fwf("h243.dat", col_positions = fwf_positions(start = pos_start, end = pos_end,col_names = var_names),col_types = var_types) 
 
 # Run this to save a permanent .Rdata file in the local working directory  
-save(h233, file ="h233.Rdata")  
+save(h243, file ="h243.Rdata")  
 
 #A few codes to make sure format is correct
-file.exists("h233.dat")
-str(h233)
-head(h233)
+str(h243)
+head(h243)
 
 ```
 
@@ -635,17 +629,105 @@ head(h233)
 # Load necessary library
 library(dplyr)
 
-
 # Select only the variables of interest
-selected_vars <- c("MNHLTH31", "RXEXP21", "RXSLF21","AGE31X", "RACEV1X", "RACEV2X", "SEX", "INSURC21", "EMPST31", "EDUCYR", "POVCAT21")
+selected_vars <- c("MNHLTH31", "RXEXP22", "RXSLF22","AGE31X", "RACEV1X", "RACEV2X", "SEX", "INSURC22", "EMPST31", "EDUCYR", "POVCAT22")
 
 # Create a new dataframe with only the selected columns
-h233_selected <- h233 %>% select(all_of(selected_vars))
+h243_selected <- h243 %>% select(all_of(selected_vars))
 
 # View the first few rows of the new dataframe
-head(h233_selected)
+head(h243_selected)
+h243_selected
 
 ```
+
+```{r}
+#| label: Recoding categorical variables
+
+#Categorize poverty level 
+h243_selected$POVCAT22 <- factor(h243_selected$POVCAT22, 
+                                 levels = c(1, 2, 3, 4, 5), 
+                                 labels = c("Poor", "Near Poor", "Low Income", "Middle Income", "High Income"))
+
+#Categorize perceived mental health level 
+h243_selected$MNHLTH31 <- factor(h243_selected$MNHLTH31, 
+                                 levels = c(1, 2, 3, 4, 5), 
+                                 labels = c("Excellent", "Very Good", "Good", "Fair", "Poor"))
+
+#Categorize insurance status 
+h243_selected$INSURC22 <- factor(h243_selected$INSURC22, 
+                                 levels = c(1, 2, 3, 4, 5, 6, 7, 8),
+                                 labels = c("<65 ANY PRIVATE", "2 <65 PUBLIC ONLY", "<65 UNINSURED", "65+ EDITED MEDICARE ONLY", "65+ EDITED MEDICARE AND PRIVATE", "65+ EDITED MEDICARE AND OTH PUB ONLY", "65+ UNINSURED", "65+ NO MEDICARE AND ANY PUBLIC/PRIVATE"))
+
+#Race first version categorized
+h243_selected$RACEV1X <- factor(h243_selected$RACEV1X, 
+                                levels = c(1, 2, 3, 4, 6),
+                                labels = c("WHITE", "BLACK", "AMER INDIAN/ALASKA NATIVE", "OTH ASIAN/NATV HAWAIIAN/PACFC ISL","MULTIPLE RACES REPORTED"))
+
+#Race second version categorized
+h243_selected$RACEV2X <- factor(h243_selected$RACEV2X, 
+                                levels = c(1, 2, 3, 4, 5, 6, 10, 12),
+                                labels = c("WHITE", "BLACK", "AMER INDIAN/ALASKA NATIVE", "ASIAN INDIAN", "CHINESE", "FILIPINO", "OTH ASIAN/NATV HAWAIIAN/PACFC ISL", "MULTIPLE RACES REPORTED"))
+
+#Employment categorized
+h243_selected$EMPST31 <- factor(h243_selected$EMPST31, 
+                                levels = c(-15,-8, -7, -1, 1, 2, 3, 4),
+                                labels = c("CANNOT BE COMPUTED", "DONT KNOW", "REFUSED", "INAPPLICABLE", "EMPLOYED", "TEMP NOT WORKING BUT EMPLOYED", "EMPLOYED AT ANY POINT", "NOT EMPLOYED"))
+
+```
+
+```{r}
+#|label:Education Level column added
+
+h243_selected <- h243_selected %>%
+  mutate(Education_Level = case_when(
+    EDUCYR < 6 & AGE31X >= 18 ~ "No Formal Education (Adult)",
+    EDUCYR >= 6 & EDUCYR <= 8 & AGE31X >= 18 ~ "Incomplete Middle School",
+    EDUCYR >= 9 & EDUCYR <= 11 & AGE31X >= 18 ~ "Incomplete High School",
+    EDUCYR == 12 & AGE31X >= 18 ~ "High School Graduate",
+    EDUCYR >= 13 & EDUCYR <= 15 & AGE31X >= 22 ~ "Some College",
+    EDUCYR == 16 & AGE31X >= 22 ~ "College Graduate",
+    EDUCYR >= 17 ~ "Graduate Degree",
+    TRUE ~ "Unknown"
+  ))
+
+h243_selected
+```
+
+
+```{r}
+#| label: Tables 
+
+#Making tables for all categorical variables 
+table(h243_selected$POVCAT22)
+table(h243_selected$MNHLTH31)
+table(h243_selected$RACEV1X)
+table(h243_selected$RACEV2X)
+table(h243_selected$SEX)
+table(h243_selected$INSURC22)
+table(h243_selected$EMPST31)
+```
+
+```{r}
+#| label: Summary statistics 
+
+#Calculate the mean and standard deviation
+summary(h243_selected[, c("RXEXP22", "RXSLF22", "AGE31X")])
+
+```
+
+```{r}
+#| label: Visualization of Distribution of prescription expenditure across poverty levels 
+
+library(ggplot2)
+
+ggplot(h243_selected, aes(x = POVCAT22, y = RXEXP22)) + 
+    geom_boxplot() + 
+    labs(title = "Prescription Expenditure by Poverty Level", x = "Poverty Level", y = "Total Prescription Expenditure")
+```
+
+
+
 You can add options to executable code like this
 
 ```{r}
