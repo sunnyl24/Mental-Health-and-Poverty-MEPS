@@ -9,3 +9,4 @@ The purpose of thus study is to elucidate health disparities that arise from fin
 
 I have organize the file so that...
 
+Sample size: 28336
