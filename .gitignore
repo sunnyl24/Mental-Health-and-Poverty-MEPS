@@ -3,5 +3,6 @@
 .RData
 .Ruserdata
 Untitled.Rmd
-h243.dat
+data/h243.dat
+data/h233.dat
 *.dat
