@@ -821,7 +821,7 @@ write_csv(h241h243_merged, "h241+h243_filtered.csv")
 ```{r}
 #|label: Visualization of merged data 
 
-ggplot(h241h243_merged, aes(x = POVCAT22, y = RXEXP22)) + geom_boxplot() + 
+ggplot(h241h243_merged, aes(x = POVCAT22, y = RXEXP22)) + geom_bar() + 
   labs(title = "Prescription Expenditure by Poverty Level", x = "Poverty Level", y = "Total Prescription Expenditure")
 
 ```
