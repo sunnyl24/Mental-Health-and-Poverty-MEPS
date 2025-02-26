@@ -605,41 +605,41 @@ h243_selected <- h243 %>% select(all_of(selected_vars))
 
 # View the first few rows of the new dataframe
 head(h243_selected)
-h243_selected
+h243_categorized <- h243_selected
 
 #Recoding categorical variables
 #Categorize poverty level 
-h243_selected$POVCAT22 <- factor(h243_selected$POVCAT22, 
+h243_categorized$POVCAT22 <- factor(h243_categorized$POVCAT22, 
                                  levels = c(1, 2, 3, 4, 5), 
                                  labels = c("Poor", "Near Poor", "Low Income", "Middle Income", "High Income"))
 
 #Categorize perceived mental health level 
-h243_selected$MNHLTH31 <- factor(h243_selected$MNHLTH31, 
+h243_categorized$MNHLTH31 <- factor(h243_categorized$MNHLTH31, 
                                  levels = c(1, 2, 3, 4, 5), 
                                  labels = c("Excellent", "Very Good", "Good", "Fair", "Poor"))
 
 #Categorize insurance status 
-h243_selected$INSURC22 <- factor(h243_selected$INSURC22, 
+h243_categorized$INSURC22 <- factor(h243_categorized$INSURC22, 
                                  levels = c(1, 2, 3, 4, 5, 6, 7, 8),
                                  labels = c("<65 ANY PRIVATE", "2 <65 PUBLIC ONLY", "<65 UNINSURED", "65+ EDITED MEDICARE ONLY", "65+ EDITED MEDICARE AND PRIVATE", "65+ EDITED MEDICARE AND OTH PUB ONLY", "65+ UNINSURED", "65+ NO MEDICARE AND ANY PUBLIC/PRIVATE"))
 
 #Race first version categorized
-h243_selected$RACEV1X <- factor(h243_selected$RACEV1X, 
+h243_categorized$RACEV1X <- factor(h243_categorized$RACEV1X, 
                                 levels = c(1, 2, 3, 4, 6),
                                 labels = c("WHITE", "BLACK", "AMER INDIAN/ALASKA NATIVE", "OTH ASIAN/NATV HAWAIIAN/PACFC ISL","MULTIPLE RACES REPORTED"))
 
 #Race second version categorized
-h243_selected$RACEV2X <- factor(h243_selected$RACEV2X, 
+h243_categorized$RACEV2X <- factor(h243_categorized$RACEV2X, 
                                 levels = c(1, 2, 3, 4, 5, 6, 10, 12),
                                 labels = c("WHITE", "BLACK", "AMER INDIAN/ALASKA NATIVE", "ASIAN INDIAN", "CHINESE", "FILIPINO", "OTH ASIAN/NATV HAWAIIAN/PACFC ISL", "MULTIPLE RACES REPORTED"))
 
 #Employment categorized
-h243_selected$EMPST31 <- factor(h243_selected$EMPST31, 
+h243_categorized$EMPST31 <- factor(h243_categorized$EMPST31, 
                                 levels = c(-15,-8, -7, -1, 1, 2, 3, 4),
                                 labels = c("CANNOT BE COMPUTED", "DONT KNOW", "REFUSED", "INAPPLICABLE", "EMPLOYED", "TEMP NOT WORKING BUT EMPLOYED", "EMPLOYED AT ANY POINT", "NOT EMPLOYED"))
 
 #Education Level column added
-h243_selected <- h243_selected %>%
+h243_categorized <- h243_categorized %>%
   mutate(Education_Level = case_when(
     EDUCYR < 6 & AGE31X >= 18 ~ "No Formal Education (Adult)",
     EDUCYR >= 6 & EDUCYR <= 8 & AGE31X >= 18 ~ "Incomplete Middle School",
@@ -650,5 +650,8 @@ h243_selected <- h243_selected %>%
     EDUCYR >= 17 ~ "Graduate Degree",
     TRUE ~ "Unknown"
   ))
+print(h243_selected)
+print(h243_categorized)
 
-h243_selected
+write_csv(h243_selected, "h243_selected.csv")
+write_csv(h243_categorized, "h243_categorized.csv")
