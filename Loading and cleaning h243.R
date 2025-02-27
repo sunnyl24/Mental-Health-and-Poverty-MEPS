@@ -612,6 +612,10 @@ h243_categorized <- h243_selected
 h243_categorized$POVCAT22 <- factor(h243_categorized$POVCAT22, 
                                  levels = c(1, 2, 3, 4, 5), 
                                  labels = c("Poor", "Near Poor", "Low Income", "Middle Income", "High Income"))
+#Categorize SEX
+h243_categorized$SEX <- factor(h243_categorized$SEX, 
+                                    levels = c(1, 2), 
+                                    labels = c("male", "female"))
 
 #Categorize perceived mental health level 
 h243_categorized$MNHLTH31 <- factor(h243_categorized$MNHLTH31, 
@@ -637,6 +641,7 @@ h243_categorized$RACEV2X <- factor(h243_categorized$RACEV2X,
 h243_categorized$EMPST31 <- factor(h243_categorized$EMPST31, 
                                 levels = c(-15,-8, -7, -1, 1, 2, 3, 4),
                                 labels = c("CANNOT BE COMPUTED", "DONT KNOW", "REFUSED", "INAPPLICABLE", "EMPLOYED", "TEMP NOT WORKING BUT EMPLOYED", "EMPLOYED AT ANY POINT", "NOT EMPLOYED"))
+
 
 #Education Level column added
 h243_categorized <- h243_categorized %>%

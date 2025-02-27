@@ -46,28 +46,27 @@ h241_filtered <- h241_selected %>%
   filter(ICD10CDX %in% psych_codes) %>% 
   select(DUPERSID, ICD10CDX)
 
-h241_filtered
 
 #Merge duplicate DUPERSID and make column that concatenates all psychiatric conditions  
 h241_summary <- h241_filtered %>%
   group_by(DUPERSID) %>%
   summarise(
-    total_conditions = n(),
-    all_conditions = paste(unique(ICD10CDX), collapse = ", ")  # Concatenate unique conditions
+    psych_conditions_count = n(),
+    psych_conditions = paste(unique(ICD10CDX), collapse = ", ")  # Concatenate unique conditions
   )
+
+h241_summary
 
 #This summary concatenates all conditions and includes all conditions, not just psychiatric 
 h241_summary2 <- h241_selected %>%
   group_by(DUPERSID) %>%
-  summarise(
-    total_conditions = n(),
-    all_conditions = paste(unique(ICD10CDX), collapse = ", ")  # Concatenate unique conditions
-  )
+  summarise(all_conditions = paste(unique(ICD10CDX), collapse = ", ")) # Concatenate unique conditions
 
 #Add new column psych_count that counts how many psychiatric illnesses one has
 h241_summary2 <- h241_summary2 %>%
   mutate(psych_count = str_count(all_conditions, paste(psych_codes, collapse = "|")))
 
+#Checking current status of dataframes
 h241_summary
 h241_summary2
 h243_categorized
@@ -75,8 +74,6 @@ h243_categorized
 duplicates <- h243_categorized %>%
   count(DUPERSID) %>%
   filter (n>1)
-
-duplicates
 
 # Count how many DUPERSID values are common between both dataframes
 matching_count <- h241_summary2 %>%

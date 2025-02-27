@@ -77,9 +77,10 @@ h239a_person_level <- h239a_coladded %>%
   summarise(
     # Concatenate all unique psychiatric drugs per person
     all_psych_drugs = paste(unique(unlist(across(all_of(psych_columns)))), collapse = ", "),
-    # Count how many psychiatric drug codes a person has
-    psych_drug_count = sum(unlist(across(all_of(psych_columns))) %in% psych_codes, na.rm = TRUE)
-  )
+    # Count unique psychiatric drug codes
+    psych_drug_count = length(unique(unlist(across(all_of(psych_columns)))[unlist(across(all_of(psych_columns))) %in% psych_codes])))
+
+h239a_person_level
     
 all_merged <- h239a_person_level %>%
   inner_join(h241h243_merged, by = "DUPERSID")
@@ -88,4 +89,3 @@ print(all_merged)
 
 #Save the all_merged file 
 write_csv(all_merged, "all_merged.csv")
-

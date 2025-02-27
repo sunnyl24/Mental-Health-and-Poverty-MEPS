@@ -1,7 +1,35 @@
 ---
 title: "Poverty and Mental Health Using Medical Expenditure Panel Survey (MEPS)"
+author:
+- name: Sunny Lee 
+  corresponding: true
+  email: snylee@uchicago.edu
+  affiliations:
+- name: University of Chicago
+department: Department of Comparative Human Development
+address: 1101 E 58th St
+city: Chicago
+region: IL
+postal-code: 60637
+abstract: "This is my abstract."
+keywords: [MEPS, Medical Expenditure Panel Survery, Mental Health, Poverty, Prescribed Medicine, Psychiatric Drug, Drug Expenditure]
+author-note:
+disclosures:
+conflict of interest: The author has no conflict of interest to
+declare.
+bibliography: mybibfile.bib
+format:
+#apaquarto-docx: default
+apaquarto-html: default
+apaquarto-pdf: default
+#apaquarto-typst: default
+
+title: "Poverty and Mental Health Using Medical Expenditure Panel Survey (MEPS)"
 date: 2025-02-25
-output: html_document 
+format: 
+  html: 
+    toc: true
+    code-fold: true 
 ---
 
 # Poverty and Mental Health Using Medical Expenditure Panel Survey (MEPS)
@@ -14,10 +42,11 @@ Quarto enables you to weave together content and executable code into a finished
 
 When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
 
-```{r setup, include=FALSE}
+```{r}
 knitr::opts_chunk$set(echo = TRUE)
 
 #| label: Setting up the quarto for data cleaning
+#| include: false
 
 library(readr) #Run for every new R session
 
@@ -27,21 +56,96 @@ source ("Loading and cleaning h243.R")
 #Source an R script that merges full year consolidated and medical conditions file 
 source("Merged h243 and h241.R")
 
+#Source all 
+source("Added h239a to data.R")
+
+print(all_merged)
+
+my_data <- all_merged
 ```
 
 ```{r}
-#| label: tbl-h243_selected
+#|label: Categorical variables to factors
+
+my_data <- my_data %>%
+  mutate(
+    MNHLTH31 = as.factor(MNHLTH31),   # Perceived Mental Health
+    POVCAT22 = as.factor(POVCAT22),   # Poverty Level
+    SEX = as.factor(SEX),             # Gender
+    INSURC22 = as.factor(INSURC22),   # Insurance Status
+    EMPST31 = as.factor(EMPST31)      # Employment Status
+  )
+
+table(my_data$POVCAT22)
+table(my_data$MNHLTH31)
+
+```
+
+```{r}
+#|label: Summary Statistics 
+
+summary(my_data[, c("psych_drug_count", "psych_count", "RXEXP22", "RXSLF22", "MNHLTH31", "POVCAT22")])
+
+```
+
+```{r}
+#| label: tbl-h243_categorized
 #| tbl-cap: "Poverty and Perceived Mental Health"
-#| apa-note: Extracted relevant variables from 2022 Full Year Consolidated File and 2022 Medical Conditions File.
+#| apa-note: Extracted relevant variables from 2022 Full Year Consolidated File
 
 #install.packages("flextable")  # Install flextable if you haven't already
 library(flextable)  # Load flextable
 
-head(h243_selected) %>% #With categorized rows but no medical conditions file information
+head(h243_categorized) %>% #With categorized rows but no medical conditions file information
   flextable() %>%
   flextable::theme_apa()
 
 ```
+
+```{r}
+#| label: Logistic Regression - Poverty and Perceived Mental Health
+logit_model <- glm(MNHLTH31 ~ POVCAT22 + AGE31X + SEX + INSURC22 + EMPST31 + EDUCYR,
+                   data = my_data, 
+                   family = binomial())
+
+summary(logit_model)
+```
+## Interpreting logistic regression of poverty and 
+
+All other groups of poverty have no stastically signficant association with mental health, but the high-income group **High Income (-0.4580, p < 0.001)** has the strongest negative effect, indicating that higher income significantly reduces the likelihood of reporting poor mental health. Overall, Middle and High Income groups show the strongest effects.
+
+Females (SEXfemale = 0.0915, p = 0.028) are slightly more likely to report poor mental health than males.
+
+Given **-0.0174, p = 0.0116** of association between MNHLTH31 and EDUCYR, we can conclude that higher education slightly reduces the likelihood of poor mental health.
+
+Age is not a significant predictor in poor mental health. 
+
+```{r}
+#| label: Logistic Regression - Poverty and Diagnosed Mental Health Condition
+logit_model <- glm(psych_count ~ POVCAT22 + AGE31X + SEX + INSURC22 + EMPST31 + EDUCYR,
+                   data = my_data, 
+                   family = binomial())
+
+summary(logit_model)
+```
+
+
+```{r}
+#| label: Logistic Regression - Prescription Expenditure & Mental Health 
+
+lm_model <- lm(RXSLF22 ~ MNHLTH31 + POVCAT22 + AGE31X + SEX + INSURC22 + EMPST31 + EDUCYR + psych_drug_count, data = my_data)
+
+summary(lm_model)
+
+```
+
+## Interpreting logistic regression 
+
+Residual Standard Error: 762.3
+
+Multiple R²: 0.03592
+F-statistic: 18.97
+
 
 ```{r}
 #| label: tbl-h243_selected
@@ -67,6 +171,8 @@ head(h241h243_merged_cate) %>% #Including medical conditions file and categorize
   flextable() %>%
   flextable::theme_apa()
 ```
+
+
 
 
 ```{r}
