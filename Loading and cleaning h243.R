@@ -625,7 +625,7 @@ h243_categorized$MNHLTH31 <- factor(h243_categorized$MNHLTH31,
 #Categorize insurance status 
 h243_categorized$INSURC22 <- factor(h243_categorized$INSURC22, 
                                  levels = c(1, 2, 3, 4, 5, 6, 7, 8),
-                                 labels = c("<65 ANY PRIVATE", "2 <65 PUBLIC ONLY", "<65 UNINSURED", "65+ EDITED MEDICARE ONLY", "65+ EDITED MEDICARE AND PRIVATE", "65+ EDITED MEDICARE AND OTH PUB ONLY", "65+ UNINSURED", "65+ NO MEDICARE AND ANY PUBLIC/PRIVATE"))
+                                 labels = c("<65 ANY PRIVATE", "<65 PUBLIC ONLY", "<65 UNINSURED", "65+ EDITED MEDICARE ONLY", "65+ EDITED MEDICARE AND PRIVATE", "65+ EDITED MEDICARE AND OTH PUB ONLY", "65+ UNINSURED", "65+ NO MEDICARE AND ANY PUBLIC/PRIVATE"))
 
 #Race first version categorized
 h243_categorized$RACEV1X <- factor(h243_categorized$RACEV1X, 

@@ -83,6 +83,7 @@ table(my_data$MNHLTH31)
 
 ```{r}
 #|label: Summary Statistics 
+#|include: true
 
 summary(my_data[, c("psych_drug_count", "psych_count", "RXEXP22", "RXSLF22", "MNHLTH31", "POVCAT22")])
 
@@ -90,13 +91,14 @@ summary(my_data[, c("psych_drug_count", "psych_count", "RXEXP22", "RXSLF22", "MN
 
 ```{r}
 #| label: tbl-h243_categorized
+#| include: true
 #| tbl-cap: "Poverty and Perceived Mental Health"
 #| apa-note: Extracted relevant variables from 2022 Full Year Consolidated File
 
 #install.packages("flextable")  # Install flextable if you haven't already
 library(flextable)  # Load flextable
 
-head(h243_categorized) %>% #With categorized rows but no medical conditions file information
+head(all_merged) %>% #With categorized rows but no medical conditions file information
   flextable() %>%
   flextable::theme_apa()
 
@@ -202,7 +204,7 @@ summary(h243_selected[, c("RXEXP22", "RXSLF22", "AGE31X")])
 library(ggplot2)
 
 #Mental health by poverty level
-ggplot(h243_selected, aes(x = MNHLTH31, fill = POVCAT22)) +
+ggplot(all_merged, aes(x = MNHLTH31, fill = POVCAT22)) +
     geom_bar(position = "fill") +
     labs(title = "Perceived Mental Health by Poverty Level", x = "Mental Health Status", y = "Proportion") +
     scale_y_continuous(labels = scales::percent) +

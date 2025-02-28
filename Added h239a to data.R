@@ -89,3 +89,6 @@ print(all_merged)
 
 #Save the all_merged file 
 write_csv(all_merged, "all_merged.csv")
+
+num_diagnosed <- sum(all_merged$psych_count >= 1, na.rm = TRUE)
+print(num_diagnosed)
