@@ -51,13 +51,13 @@ knitr::opts_chunk$set(echo = TRUE)
 library(readr) #Run for every new R session
 
 #Source an R script that has imported ASCII file and data-cleaned, extracting only relevant variables
-source ("Loading and cleaning h243.R")
+source(file.path("Data Wrangling R Scripts", "Loading and cleaning h243.R"))
 
 #Source an R script that merges full year consolidated and medical conditions file 
-source("Merged h243 and h241.R")
+source ("Data Wrangling R Scripts/Merged h243 and h241.R")
 
 #Source all 
-source("Added h239a to data.R")
+source ("Data Wrangling R Scripts/Added h239a to data.R")
 
 print(all_merged)
 
