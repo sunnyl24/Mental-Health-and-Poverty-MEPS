@@ -1,5 +1,5 @@
 ---
-title: "Poverty and Mental Health Using Medical Expenditure Panel Survey (MEPS)"
+title: "Insurance coverage and Psychiatric Drug Exposure"
 author:
 - name: Sunny Lee 
   corresponding: true
@@ -17,8 +17,8 @@ author-note:
 disclosures:
 conflict of interest: The author has no conflict of interest to
 declare.
-bibliography: mybibfile.bib
 format:
+bibliography: mybibfile.bib
 #apaquarto-docx: default
 apaquarto-html: default
 apaquarto-pdf: default
@@ -32,18 +32,10 @@ format:
     code-fold: true 
 ---
 
-# Poverty and Mental Health Using Medical Expenditure Panel Survey (MEPS)
-
-## Quarto
-
-Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
-
-## Running Code
-
-When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+# Insurance coverage and Psychiatric Drug Exposure
 
 ```{r}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set
 
 #| label: Setting up the quarto for data cleaning
 #| include: false
@@ -51,13 +43,13 @@ knitr::opts_chunk$set(echo = TRUE)
 library(readr) #Run for every new R session
 
 #Source an R script that has imported ASCII file and data-cleaned, extracting only relevant variables
-source(file.path("Data Wrangling R Scripts", "Loading and cleaning h243.R"))
+source ("data-wrangling/Loading and cleaning h243.R")
 
 #Source an R script that merges full year consolidated and medical conditions file 
-source ("Data Wrangling R Scripts/Merged h243 and h241.R")
+source ("data-wrangling/Merged h243 and h241.R")
 
 #Source all 
-source ("Data Wrangling R Scripts/Added h239a to data.R")
+source ("data-wrangling/Added h239a to data.R")
 
 print(all_merged)
 
@@ -69,15 +61,87 @@ my_data <- all_merged
 
 my_data <- my_data %>%
   mutate(
-    MNHLTH31 = as.factor(MNHLTH31),   # Perceived Mental Health
-    POVCAT22 = as.factor(POVCAT22),   # Poverty Level
+    RACETHX = as.factor(RACETHX),   # Race
     SEX = as.factor(SEX),             # Gender
     INSURC22 = as.factor(INSURC22),   # Insurance Status
-    EMPST31 = as.factor(EMPST31)      # Employment Status
+    POVCAT22 = as.factor(POVCAT22),   # Poverty Level
+
   )
 
+table(my_data$SEX)
 table(my_data$POVCAT22)
-table(my_data$MNHLTH31)
+table(my_data$RACETHX)
+table(my_data$INSURC22)
+table(my_data$psych_drug_exposure)
+table(my_data$psych_cond_exist)
+
+```
+```{r, echo=FALSE}
+
+#|label: Load packages for descriptive statistics and relevant R Script 
+#install.packages("gtsummary") #commented out the install function so it doesn't install everytime
+#install.packages("flextable")
+library(gtsummary)
+library(flextable)
+library(tidyverse)
+library(dplyr)
+library(knitr)
+library(kableExtra)
+
+source("functions.R")
+```
+
+```{r}
+#|label: Descriptive Statistics by exposure to psychiatric drugs 
+#|fig-cap: "Descriptive statistics by exposure to psychiatric drugs"
+
+# Mutate psych_drug_exposure to a factor
+all_merged <- all_merged %>%
+  mutate(psych_drug_exposure = factor(psych_drug_exposure, levels = c("No", "Yes")))
+
+# Generate descriptive statistics
+# Load necessary packages
+library(tidyverse)
+library(knitr)
+library(kableExtra)
+
+# Generate descriptive statistics by psychiatric drug exposure
+table1 <- all_merged %>%
+  group_by(psych_drug_exposure) %>%
+  summarise(
+    `Age (Mean ± SD)` = paste0(round(mean(AGE31X, na.rm = TRUE), 2), 
+                                " (±", round(sd(AGE31X, na.rm = TRUE), 2), ")"),
+    `Male (%)` = paste0(round(mean(SEX == "Male", na.rm = TRUE) * 100, 2), "%"),
+    `Female (%)` = paste0(round(mean(SEX == "Female", na.rm = TRUE) * 100, 2), "%"),
+    `Hispanic (%)` = paste0(round(mean(RACETHX == "Hispanic", na.rm = TRUE) * 100, 2), "%"),
+    `Non-Hispanic White (%)` = paste0(round(mean(RACETHX == "Non-Hispanic White", na.rm = TRUE) * 100, 2), "%"),
+    `Non-Hispanic Black (%)` = paste0(round(mean(RACETHX == "Non-Hispanic Black", na.rm = TRUE) * 100, 2), "%"),
+    `Non-Hispanic Asian (%)` = paste0(round(mean(RACETHX == "Non-Hispanic Asian", na.rm = TRUE) * 100, 2), "%"),
+    `Non-Hispanic Other/Multiple (%)` = paste0(round(mean(RACETHX == "Non-Hispanic Other/Multiple", na.rm = TRUE) * 100, 2), "%"),
+    `Income: Poor/Negative (%)` = paste0(round(mean(POVCAT22 == "Poor/Negative", na.rm = TRUE) * 100, 2), "%"),
+    `Income: Near Poor (%)` = paste0(round(mean(POVCAT22 == "Near Poor", na.rm = TRUE) * 100, 2), "%"),
+    `Income: Low Income (%)` = paste0(round(mean(POVCAT22 == "Low Income", na.rm = TRUE) * 100, 2), "%"),
+    `Income: Middle Income (%)` = paste0(round(mean(POVCAT22 == "Middle Income", na.rm = TRUE) * 100, 2), "%"),
+    `Income: High Income (%)` = paste0(round(mean(POVCAT22 == "High Income", na.rm = TRUE) * 100, 2), "%")
+  ) %>%
+  pivot_longer(cols = -psych_drug_exposure, names_to = "Variable", values_to = "Value") %>%
+  pivot_wider(names_from = psych_drug_exposure, values_from = Value)
+
+# Rename columns for better readability
+colnames(table1) <- c("Variable", "No Exposure (%)", "Exposed (%)")
+
+# Format the table with APA-style formatting
+table1 %>%
+  kable("html", 
+        caption = "Table 1: Descriptive Statistics by Psychiatric Drug Exposure") %>%
+  kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover")) %>%
+  pack_rows("Age", 1, 1) %>%
+  pack_rows("Sex", 2, 3) %>%
+  pack_rows("Race/Ethnicity", 4, 8) %>%
+  pack_rows("Income Level", 9, 13) %>%
+  add_indent(c(2:3, 4:8, 9:13))  # Indent subcategories
+
+print(table1)
 
 ```
 
