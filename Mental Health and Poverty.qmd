@@ -17,12 +17,29 @@ author-note:
 disclosures:
 conflict of interest: The author has no conflict of interest to declare.
 format:
-bibliography: mybibfile.bib
+bibliography: bibliography.bib
 apaquarto-html: default
 apaquarto-pdf: default
 ---
-# Introduction
 
+# Introduction
+Mental health disorders pose a significant global challenge, with more than half of individuals suffering from mental illnesses lacking access to proper care [@pateletal_2010_reducing]. This treatment gap is widespread across nations but disproportionately affects individuals in lower-income brackets. The relationship between poverty, mental health, and social risks—including stress, stigma, and unemployment—has been extensively studied, revealing a cyclical interaction in which mental illness can lead to financial hardship while economic instability exacerbates psychiatric conditions (Knifton & Inglis, 2020). Despite the heightened risk of psychiatric disorders among socioeconomically disadvantaged populations, significant barriers—including financial constraints, lack of insurance, and limited healthcare access—impede treatment utilization (Dong et al., 2021).
+
+One of the primary obstacles to mental healthcare access is the cost of psychiatric medications, which constitute a substantial portion of healthcare expenditures (Dong et al., 2021). The rising cost of psychotropic drugs has placed an increasing financial burden on low-income families, leading to a higher prevalence of unmet healthcare needs (Knifton & Inglis, 2020). Insurance coverage plays a crucial role in mitigating these disparities, as research has shown that expanding coverage improves access to prescription medications. For example, a 2018 study in Oregon found that Medicaid coverage reduced the prevalence of untreated depression by over 60%, while increasing the use of antidepressants and other psychiatric medications (McConnell et al., 2018). Similarly, the Medicare Improvement for Patients and Providers Act of 2008 facilitated greater psychotropic medication use by reducing the cost burden of prescriptions (Polinski et al., 2010). These findings underscore the importance of financial barriers in psychiatric medication adherence, highlighting the role of insurance policies in reducing disparities in mental healthcare access.
+
+Given the critical role of insurance coverage in determining psychiatric drug access, this study examines the following research question: What is the relationship between insurance coverage and exposure to psychiatric drugs? Based on prior research, the study hypothesizes that individuals with comprehensive insurance coverage will have greater exposure to psychiatric medications compared to those with limited or no insurance.
+
+This study utilizes data from the Medical Expenditure Panel Survey (MEPS) to investigate the association between insurance coverage and psychiatric drug exposure, obtained from the Prescribed Medicine File. The primary outcome variable, psychiatric drug exposure, is defined as a binary indicator of whether an individual was prescribed psychiatric medication, as reported by the household and confirmed by a pharmacy with individual consent. The key predictor variable, insurance coverage, is categorized into private insurance, public insurance (Medicaid, Medicare), and uninsured status. Several covariates that may influence psychiatric drug exposure are also considered, including:
+
+Number of psychiatric diagnoses
+Demographic characteristics: Age, race/ethnicity, and sex
+Socioeconomic status: Poverty/income level
+Additionally, to further explore the role of insurance coverage in psychiatric medication access, the study examines three distinct subgroups:
+
+Individuals diagnosed with a psychiatric condition but not prescribed medication
+Individuals diagnosed with a psychiatric condition and prescribed medication
+Individuals without a psychiatric diagnosis who were prescribed psychiatric medication
+By analyzing these subgroups, this study seeks to assess whether insurance status not only influences psychiatric medication access but also diagnostic and treatment patterns. The findings may contribute to healthcare policy discussions, particularly in advocating for expanded insurance coverage and reduced cost-related barriers to psychiatric treatment.
 
 # Methods
 
