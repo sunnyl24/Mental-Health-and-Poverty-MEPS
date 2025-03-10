@@ -88,11 +88,17 @@ all_merged <- h239a_person_level %>%
 all_merged$psych_drug_exposure <- ifelse(all_merged$psych_drug_count > 0, "Yes", "No")
 all_merged$psych_cond_exist <- ifelse(all_merged$psych_count > 0, "Yes", "No")
 
+clean_data <- all_merged %>% 
+  select (DUPERSID, psych_drug_count, psych_count, AGE31X, RACETHX, SEX, INSURC22, POVCAT22)
 
 print(all_merged)
+print(clean_data)
 
 #Save the all_merged file 
 write_csv(all_merged, "cleaned-data/all_merged.csv")
 
-num_diagnosed <- sum(all_merged$psych_count >= 1, na.rm = TRUE)
-print(num_diagnosed)
+clean_data <- clean_data %>%
+  mutate(exposure_psych_drugs = factor(ifelse(psych_drug_count > 0, "Yes", "No")))
+
+print(clean_data)
+

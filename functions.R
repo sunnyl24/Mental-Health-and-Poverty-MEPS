@@ -3,3 +3,7 @@ modify_column_names <- function(tbl, labels) {
   tbl %>%
     modify_header(update = labels)
 }
+
+superscript <- function(text) {
+  paste0("<sup>", text, "</sup>")
+}
