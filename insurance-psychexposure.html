@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.40">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Sunny Lee">
+<meta name="keywords" content="MEPS, Medical Expenditure Panel Survey, Mental Health, Poverty, Prescribed Medicine, Psychiatric Drug, Drug Expenditure">
+
+<title>Insurance Coverage and Psychiatric Drug Exposure</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="insurance-psychexposure_files/libs/clipboard/clipboard.min.js"></script>
+<script src="insurance-psychexposure_files/libs/quarto-html/quarto.js"></script>
+<script src="insurance-psychexposure_files/libs/quarto-html/popper.min.js"></script>
+<script src="insurance-psychexposure_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="insurance-psychexposure_files/libs/quarto-html/anchor.min.js"></script>
+<link href="insurance-psychexposure_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="insurance-psychexposure_files/libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="insurance-psychexposure_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="insurance-psychexposure_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="insurance-psychexposure_files/libs/bootstrap/bootstrap-973236bd072d72a04ee9cd82dcc9cb29.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="insurance-psychexposure_files/libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="insurance-psychexposure_files/libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+<link href="insurance-psychexposure_files/libs/tabwid-1.1.3/tabwid.css" rel="stylesheet">
+<script src="insurance-psychexposure_files/libs/tabwid-1.1.3/tabwid.js"></script>
+
+
+</head>
+
+<body>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">1</span> Introduction</a></li>
+  <li><a href="#methods" id="toc-methods" class="nav-link" data-scroll-target="#methods"><span class="header-section-number">2</span> Methods</a>
+  <ul class="collapse">
+  <li><a href="#data-source" id="toc-data-source" class="nav-link" data-scroll-target="#data-source"><span class="header-section-number">2.1</span> Data Source</a></li>
+  <li><a href="#data-preparation" id="toc-data-preparation" class="nav-link" data-scroll-target="#data-preparation"><span class="header-section-number">2.2</span> Data Preparation</a>
+  <ul class="collapse">
+  <li><a href="#variable-construction" id="toc-variable-construction" class="nav-link" data-scroll-target="#variable-construction"><span class="header-section-number">2.2.1</span> Variable Construction</a></li>
+  </ul></li>
+  <li><a href="#key-variables" id="toc-key-variables" class="nav-link" data-scroll-target="#key-variables"><span class="header-section-number">2.3</span> Key Variables</a></li>
+  <li><a href="#statistical-analysis" id="toc-statistical-analysis" class="nav-link" data-scroll-target="#statistical-analysis"><span class="header-section-number">2.4</span> Statistical Analysis</a>
+  <ul class="collapse">
+  <li><a href="#descriptive-analysis" id="toc-descriptive-analysis" class="nav-link" data-scroll-target="#descriptive-analysis"><span class="header-section-number">2.4.1</span> Descriptive Analysis</a></li>
+  <li><a href="#logistic-regression-analysis" id="toc-logistic-regression-analysis" class="nav-link" data-scroll-target="#logistic-regression-analysis"><span class="header-section-number">2.4.2</span> Logistic Regression Analysis</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results"><span class="header-section-number">3</span> Results</a>
+  <ul class="collapse">
+  <li><a href="#descriptive-statistics" id="toc-descriptive-statistics" class="nav-link" data-scroll-target="#descriptive-statistics"><span class="header-section-number">3.1</span> Descriptive Statistics</a></li>
+  <li><a href="#chi-square-test-results" id="toc-chi-square-test-results" class="nav-link" data-scroll-target="#chi-square-test-results"><span class="header-section-number">3.2</span> Chi-Square Test Results</a></li>
+  <li><a href="#subgroup-chi-square-analysis" id="toc-subgroup-chi-square-analysis" class="nav-link" data-scroll-target="#subgroup-chi-square-analysis"><span class="header-section-number">3.3</span> Subgroup Chi-Square Analysis</a></li>
+  <li><a href="#logistic-regression-results" id="toc-logistic-regression-results" class="nav-link" data-scroll-target="#logistic-regression-results"><span class="header-section-number">3.4</span> Logistic Regression Results</a>
+  <ul class="collapse">
+  <li><a href="#population" id="toc-population" class="nav-link" data-scroll-target="#population"><span class="header-section-number">3.4.1</span> &lt;65 Population</a></li>
+  <li><a href="#population-1" id="toc-population-1" class="nav-link" data-scroll-target="#population-1"><span class="header-section-number">3.4.2</span> 65+ Population</a></li>
+  </ul></li>
+  <li><a href="#psychiatric-drug-exposure-by-insurance-level" id="toc-psychiatric-drug-exposure-by-insurance-level" class="nav-link" data-scroll-target="#psychiatric-drug-exposure-by-insurance-level"><span class="header-section-number">3.5</span> Psychiatric Drug Exposure by Insurance Level</a></li>
+  <li><a href="#psychiatric-drug-exposure-by-age-group" id="toc-psychiatric-drug-exposure-by-age-group" class="nav-link" data-scroll-target="#psychiatric-drug-exposure-by-age-group"><span class="header-section-number">3.6</span> Psychiatric Drug Exposure by Age Group</a></li>
+  <li><a href="#psychiatric-drug-prescription-by-age-and-sex" id="toc-psychiatric-drug-prescription-by-age-and-sex" class="nav-link" data-scroll-target="#psychiatric-drug-prescription-by-age-and-sex"><span class="header-section-number">3.7</span> Psychiatric Drug Prescription by Age and Sex</a></li>
+  <li><a href="#age-and-number-of-psychiatric-diagnosis" id="toc-age-and-number-of-psychiatric-diagnosis" class="nav-link" data-scroll-target="#age-and-number-of-psychiatric-diagnosis"><span class="header-section-number">3.8</span> Age and Number of Psychiatric Diagnosis</a></li>
+  </ul></li>
+  </ul>
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="insurance-psychexposure.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Insurance Coverage and Psychiatric Drug Exposure</h1>
+</div>
+
+
+<div class="quarto-title-meta-author">
+  <div class="quarto-title-meta-heading">Author</div>
+  <div class="quarto-title-meta-heading">Affiliation</div>
+  
+    <div class="quarto-title-meta-contents">
+    <p class="author">Sunny Lee <a href="mailto:snylee@uchicago.edu" class="quarto-title-author-email"><i class="bi bi-envelope"></i></a> </p>
+  </div>
+  <div class="quarto-title-meta-contents">
+        <p class="affiliation">
+            University of Chicago
+          </p>
+      </div>
+  </div>
+
+<div class="quarto-title-meta">
+
+      
+  
+    
+  </div>
+  
+<div>
+  <div class="abstract">
+    <div class="block-title">Abstract</div>
+    This is my abstract.
+  </div>
+</div>
+
+<div>
+  <div class="keywords">
+    <div class="block-title">Keywords</div>
+    <p>MEPS, Medical Expenditure Panel Survey, Mental Health, Poverty, Prescribed Medicine, Psychiatric Drug, Drug Expenditure</p>
+  </div>
+</div>
+
+</header>
+
+
+<section id="introduction" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Introduction</h1>
+<p>Mental health disorders pose a significant global challenge, with more than half of individuals suffering from mental illnesses lacking access to proper care <span class="citation" data-cites="pateletal_2010_reducing">(<a href="#ref-pateletal_2010_reducing" role="doc-biblioref">PATEL et al. 2010</a>)</span>. This treatment gap is widespread across nations but disproportionately affects individuals in lower-income brackets. The relationship between poverty, mental health, and social risks including stress, stigma, and unemployment has been extensively studied, revealing a cyclical interaction in which mental illness can lead to financial hardship while economic instability exacerbates psychiatric conditions <span class="citation" data-cites="kniftoninglis__poverty">(<a href="#ref-kniftoninglis__poverty" role="doc-biblioref">Knifton and Inglis n.d.</a>)</span>. <span class="citation" data-cites="marbinetal_2022_perspectives">Marbin et al. (<a href="#ref-marbinetal_2022_perspectives" role="doc-biblioref">2022</a>)</span> has shown that income inequality also has been linked to heightened mental disorder problems in developed countries. Despite the heightened risk of psychiatric disorders among socioeconomically disadvantaged populations, significant barriers including financial constraints, lack of insurance, and limited healthcare access impede treatment utilization <span class="citation" data-cites="dongetal_2021_comparison">(<a href="#ref-dongetal_2021_comparison" role="doc-biblioref">Dong et al. 2021</a>)</span>.</p>
+<p>The treatment of mental disorders have increasingly geared toward reliance on psychotropic drugs, given its easier accessibility compared to in-patient care or regular office visits<span class="citation" data-cites="donohuefrank_2007_estimating">(<a href="#ref-donohuefrank_2007_estimating" role="doc-biblioref">Donohue and Frank 2007</a>)</span>. One of the primary obstacles to mental healthcare access is the cost of psychiatric medications, which constitute a substantial portion of healthcare expenditures <span class="citation" data-cites="dongetal_2021_comparison">(<a href="#ref-dongetal_2021_comparison" role="doc-biblioref">Dong et al. 2021</a>)</span>. The rising cost of psychotropic drugs has placed an increasing financial burden on low-income families, leading to a higher prevalence of unmet healthcare needs <span class="citation" data-cites="sarmaetal_2007_influence">(<a href="#ref-sarmaetal_2007_influence" role="doc-biblioref">Sarma, Basu, and Gupta 2007</a>)</span>. Insurance coverage plays a crucial role in mitigating these disparities, as research has shown that expanding coverage improves access to prescription medications. For example, a 2018 study in Oregon found that Medicaid coverage reduced the prevalence of untreated depression by over 60%, while increasing the use of antidepressants and other psychiatric medications <span class="citation" data-cites="baickeretal_2018_effect">(<a href="#ref-baickeretal_2018_effect" role="doc-biblioref">Baicker et al. 2018</a>)</span>. Similarly, studies have found that cost-sharing declines psychotropic drug usage, even in cases where usage is necessary for patients<span class="citation" data-cites="fungetal_2013_adverse">(<a href="#ref-fungetal_2013_adverse" role="doc-biblioref">Fung et al. 2013</a>)</span>. These findings underscore the importance of financial barriers in psychiatric medication adherence, highlighting the role of insurance policies in reducing disparities in mental healthcare access.</p>
+<p>Given the critical role of insurance coverage in determining psychiatric drug access, this study examines the following research question: <strong>What is the relationship between insurance coverage and exposure to psychiatric drugs?</strong> Based on prior research, the study hypothesizes that individuals with comprehensive insurance coverage will have greater exposure to psychiatric medications compared to those with limited or no insurance.</p>
+<p>This study utilizes data from the Medical Expenditure Panel Survey (MEPS) to investigate the association between insurance coverage and psychiatric drug exposure, obtained from the Prescribed Medicine File. The primary outcome variable, psychiatric drug exposure, is defined as a binary indicator of whether an individual was prescribed psychiatric medication, as reported by the household and confirmed by a pharmacy with individual consent. The key predictor variable, insurance coverage, is categorized into private insurance, public insurance (Medicaid, Medicare), and uninsured status. Several covariates that may influence psychiatric drug exposure are also considered, including:</p>
+<p>Number of psychiatric diagnoses <strong>Demographic characteristics</strong>: Age, race/ethnicity, and sex <strong>Socioeconomic status</strong>: Poverty/income level.</p>
+</section>
+<section id="methods" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Methods</h1>
+<section id="data-source" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="data-source"><span class="header-section-number">2.1</span> Data Source</h2>
+<p>This study utilizes data from the <strong>Medical Expenditure Panel Survey (MEPS)</strong>, a nationally representative survey that collects information on healthcare utilization, expenditures, and insurance coverage in the United States. Specifically, the <strong>2022 MEPS Full-Year Consolidated File (HC 243), Medical Conditions File (HC 241), and Prescribed Medicine File (HC 239a)</strong> were used. The <strong>household component</strong> of MEPS provides person-level data, while the <strong>medical conditions and prescribed medicine files</strong> include condition- and prescription-level data, respectively. The <strong>2022 dataset</strong> included <strong>21,747 individuals</strong> <a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>. Participants included in this study were individuals aged <strong>18 years and older</strong>.</p>
+</section>
+<section id="data-preparation" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="data-preparation"><span class="header-section-number">2.2</span> Data Preparation</h2>
+<section id="variable-construction" class="level3" data-number="2.2.1">
+<h3 data-number="2.2.1" class="anchored" data-anchor-id="variable-construction"><span class="header-section-number">2.2.1</span> Variable Construction</h3>
+<ul>
+<li><strong>Psychiatric Drug Exposure:</strong> A binary outcome variable indicating whether an individual was prescribed and purchased a psychiatric drug. This was derived from the <strong>HC 239a prescribed medicine file</strong>, where only medications classified under psychiatric therapeutic classes were retained.</li>
+<li><strong>Psychiatric Diagnoses:</strong> Conditions were filtered using <strong>ICD codes</strong> from the <strong>HC 241 medical conditions file</strong>, and only psychiatric conditions were retained.</li>
+<li><strong>Insurance Coverage:</strong> The original MEPS insurance categories were <strong>recoded</strong> as follows:
+<ul>
+<li><strong>&lt;65 Any Private and &lt;65 Public Only → &lt;65 Any Private/Public</strong>
+<ul>
+<li><strong>65+ Medicare and Private, 65+ Medicare and Other Public Only → 65+ Medicare and Any Private/Public</strong>
+<ul>
+<li><strong>65+ No Medicare and Any Public/Private → 65+ No Medicare and Any Private/Public</strong> Age was both left as a continuous variable and categorized as <strong>&lt;65 years</strong> and <strong>65+ years</strong> to align with Medicare eligibility thresholds.</li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul>
+</section>
+</section>
+<section id="key-variables" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="key-variables"><span class="header-section-number">2.3</span> Key Variables</h2>
+<ul>
+<li><strong>Outcome Variable:</strong> Psychiatric drug exposure (Yes/No)</li>
+<li><strong>Independent Variable:</strong> Insurance coverage status, categorized as:
+<ul>
+<li>&lt;65 Uninsured</li>
+<li>&lt;65 Any Private/Public</li>
+<li>65+ without Medicare</li>
+<li>65+ with Medicare</li>
+</ul></li>
+<li><strong>Covariates:</strong>
+<ul>
+<li>Age</li>
+<li>Sex</li>
+<li>Race/Ethnicity</li>
+<li>Income Level</li>
+</ul></li>
+</ul>
+</section>
+<section id="statistical-analysis" class="level2" data-number="2.4">
+<h2 data-number="2.4" class="anchored" data-anchor-id="statistical-analysis"><span class="header-section-number">2.4</span> Statistical Analysis</h2>
+<section id="descriptive-analysis" class="level3" data-number="2.4.1">
+<h3 data-number="2.4.1" class="anchored" data-anchor-id="descriptive-analysis"><span class="header-section-number">2.4.1</span> Descriptive Analysis</h3>
+<p>Descriptive statistics were computed for demographic and socioeconomic characteristics, stratified by psychiatric drug exposure status. <strong>Chi-square tests</strong> examined bivariate relationships between psychiatric drug exposure and key variables.</p>
+</section>
+<section id="logistic-regression-analysis" class="level3" data-number="2.4.2">
+<h3 data-number="2.4.2" class="anchored" data-anchor-id="logistic-regression-analysis"><span class="header-section-number">2.4.2</span> Logistic Regression Analysis</h3>
+<p>Separate <strong>logistic regression models</strong> were performed for each age group to assess the association between <strong>insurance coverage and psychiatric drug exposure</strong>. Odds ratios (OR) with <strong>95% confidence intervals (CIs)</strong> were estimated. The reference groups were: - <strong>&lt;65 Uninsured</strong> for the &lt;65 model - <strong>65+ without Medicare</strong> for the 65+ model</p>
+<p>All analyses were conducted using <strong>R version 2024.12.0+467</strong> with the <code>tidyverse</code>, <code>gtsummary</code>, <code>knitr</code>, <code>kable</code>, <code>papaja</code>, <code>broom</code>, and <code>flextable</code> packages.</p>
+</section>
+</section>
+</section>
+<section id="results" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Results</h1>
+<section id="descriptive-statistics" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="descriptive-statistics"><span class="header-section-number">3.1</span> Descriptive Statistics</h2>
+<div class="cell">
+<div id="tbl-descriptive-stat" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-descriptive-stat-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;1: Descriptive statistics by exposure to psychiatric drugs
+</figcaption>
+<div aria-describedby="tbl-descriptive-stat-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="table table-striped table-hover do-not-create-environment cell caption-top table-sm small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Variable</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">No Exposure (%)</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Exposed (%)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd" data-grouplength="1">
+<td colspan="3" style="border-bottom: 1px solid"><strong>Age</strong></td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Age (Mean ± SD)</td>
+<td style="text-align: left;">50.73 (±23.29)</td>
+<td style="text-align: left;">51.74 (±20.56)</td>
+</tr>
+<tr class="odd" data-grouplength="2">
+<td colspan="3" style="border-bottom: 1px solid"><strong>Sex</strong></td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 4em;" data-indentlevel="2">Male (%)</td>
+<td style="text-align: left;">45.84%</td>
+<td style="text-align: left;">35.44%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 4em;" data-indentlevel="2">Female (%)</td>
+<td style="text-align: left;">54.16%</td>
+<td style="text-align: left;">64.56%</td>
+</tr>
+<tr class="even" data-grouplength="5">
+<td colspan="3" style="border-bottom: 1px solid"><strong>Race/Ethnicity</strong></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 4em;" data-indentlevel="2">Hispanic (%)</td>
+<td style="text-align: left;">17.49%</td>
+<td style="text-align: left;">11%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 4em;" data-indentlevel="2">Non-Hispanic White (%)</td>
+<td style="text-align: left;">58.31%</td>
+<td style="text-align: left;">74.56%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 4em;" data-indentlevel="2">Non-Hispanic Black (%)</td>
+<td style="text-align: left;">15.38%</td>
+<td style="text-align: left;">9.51%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 4em;" data-indentlevel="2">Non-Hispanic Asian (%)</td>
+<td style="text-align: left;">5.3%</td>
+<td style="text-align: left;">1.92%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 4em;" data-indentlevel="2">Non-Hispanic Other/Multiple (%)</td>
+<td style="text-align: left;">0%</td>
+<td style="text-align: left;">0%</td>
+</tr>
+<tr class="even" data-grouplength="5">
+<td colspan="3" style="border-bottom: 1px solid"><strong>Income Level</strong></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 4em;" data-indentlevel="2">Poor/Negative (%)</td>
+<td style="text-align: left;">15.52%</td>
+<td style="text-align: left;">17.35%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 4em;" data-indentlevel="2">Near Poor (%)</td>
+<td style="text-align: left;">4.43%</td>
+<td style="text-align: left;">5.55%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 4em;" data-indentlevel="2">Low Income (%)</td>
+<td style="text-align: left;">12.93%</td>
+<td style="text-align: left;">14.44%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 4em;" data-indentlevel="2">Middle Income (%)</td>
+<td style="text-align: left;">27.15%</td>
+<td style="text-align: left;">26.03%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 4em;" data-indentlevel="2">High Income (%)</td>
+<td style="text-align: left;">39.97%</td>
+<td style="text-align: left;">36.64%</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p><a href="#tbl-descriptive-stat" class="quarto-xref">Table&nbsp;1</a> presents descriptive statistics for the study population by psychiatric drug exposure status. Individuals exposed to psychiatric drugs were more likely to be <strong>older</strong>, <strong>female</strong>, and from <strong>higher-income</strong> groups.</p>
+</section>
+<section id="chi-square-test-results" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="chi-square-test-results"><span class="header-section-number">3.2</span> Chi-Square Test Results</h2>
+<div class="cell">
+<div id="tbl-chi-square" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-chi-square-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;2: Relationship between Insurance Level and Exposure to Psychiatric Drugs based on Covariates
+</figcaption>
+<div aria-describedby="tbl-chi-square-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<div class="tabwid"><style>.cl-1b02641a{}.cl-1aff4f96{font-family:'Helvetica';font-size:10pt;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-1aff4faa{font-family:'Helvetica';font-size:10pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-1aff4fab{font-family:'Helvetica';font-size:10pt;font-weight:normal;font-style:italic;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-1b0083a2{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-1b0083ac{margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-1b0083b6{margin:0;text-align:center;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-1b00922a{width:1.173in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1b00922b{width:0.787in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1b009234{width:0.416in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1b009235{width:0.802in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1b009236{width:1.173in;background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1b009237{width:0.787in;background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1b00923e{width:0.416in;background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1b009248{width:0.802in;background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1b009249{width:1.173in;background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0.75pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1b00924a{width:0.787in;background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0.75pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1b00924b{width:0.416in;background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0.75pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1b009252{width:0.802in;background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0.75pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1b00925c{width:1.173in;background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0.75pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1b00925d{width:0.787in;background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0.75pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1b00925e{width:0.416in;background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0.75pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1b009266{width:0.802in;background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0.75pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1b009267{width:1.173in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0.75pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1b009270{width:0.787in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0.75pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1b009271{width:0.416in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0.75pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1b00927a{width:0.802in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0.75pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-1b02641a"><thead><tr style="overflow-wrap:break-word;"><th class="cl-1b00922a"><p class="cl-1b0083a2"><span class="cl-1aff4f96">Variable</span></p></th><th class="cl-1b00922b"><p class="cl-1b0083ac"><span class="cl-1aff4f96">X.</span></p></th><th class="cl-1b009234"><p class="cl-1b0083ac"><span class="cl-1aff4f96">df</span></p></th><th class="cl-1b009235"><p class="cl-1b0083a2"><span class="cl-1aff4f96">p_value</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-1b009236"><p class="cl-1b0083b6"><span class="cl-1aff4faa">Sex</span></p></td><td class="cl-1b009237"><p class="cl-1b0083b6"><span class="cl-1aff4faa">123.864</span></p></td><td class="cl-1b00923e"><p class="cl-1b0083b6"><span class="cl-1aff4faa">1</span></p></td><td class="cl-1b009248"><p class="cl-1b0083b6"><span class="cl-1aff4fab">&lt; .001</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-1b009249"><p class="cl-1b0083b6"><span class="cl-1aff4faa">Race/Ethnicity</span></p></td><td class="cl-1b00924a"><p class="cl-1b0083b6"><span class="cl-1aff4faa">342.069</span></p></td><td class="cl-1b00924b"><p class="cl-1b0083b6"><span class="cl-1aff4faa">4</span></p></td><td class="cl-1b009252"><p class="cl-1b0083b6"><span class="cl-1aff4fab">&lt; .001</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-1b00925c"><p class="cl-1b0083b6"><span class="cl-1aff4faa">Age Group</span></p></td><td class="cl-1b00925d"><p class="cl-1b0083b6"><span class="cl-1aff4faa">110.210</span></p></td><td class="cl-1b00925e"><p class="cl-1b0083b6"><span class="cl-1aff4faa">4</span></p></td><td class="cl-1b009266"><p class="cl-1b0083b6"><span class="cl-1aff4fab">&lt; .001</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-1b009267"><p class="cl-1b0083b6"><span class="cl-1aff4faa">Poverty Level</span></p></td><td class="cl-1b009270"><p class="cl-1b0083b6"><span class="cl-1aff4faa">27.338</span></p></td><td class="cl-1b009271"><p class="cl-1b0083b6"><span class="cl-1aff4faa">4</span></p></td><td class="cl-1b00927a"><p class="cl-1b0083b6"><span class="cl-1aff4fab">&lt; .001</span></p></td></tr></tbody></table></div>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>Chi-square tests indicated significant differences in <strong>psychiatric drug exposure</strong> across <strong>Sex</strong>, <strong>Race/Ethnicity</strong>, <strong>Age Group</strong>, and <strong>Poverty Level</strong> (<a href="#tbl-chi-square" class="quarto-xref">Table&nbsp;2</a>).</p>
+<p>The chi-square test for <strong>Sex</strong> was <strong>X²</strong>(1) = 123.864, p = &lt; .001. This suggests a significant relationship between sex and psychiatric drug exposure. For <strong>Race/Ethnicity</strong>, was <strong>X²</strong>(4) = 342.069, <em>p</em> = &lt; .001, indicating a significant association between racial identity and exposure to psychiatric drugs. For <strong>Age Group</strong> was <strong>X²</strong>(4) = 110.21, <em>p</em> = &lt; .001. This suggests that psychiatric drug exposure significantly varies by age group. For <strong>Poverty Level</strong> was <strong>X²</strong>(4) = 27.338, <em>p</em> = &lt; .001. This indicates a significant association between socioeconomic status and psychiatric drug exposure.</p>
+</section>
+<section id="subgroup-chi-square-analysis" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="subgroup-chi-square-analysis"><span class="header-section-number">3.3</span> Subgroup Chi-Square Analysis</h2>
+<div class="cell" data-apa-note="Some subgroups didn't have enough representation due to the nature of MEPS data">
+<div id="tbl-subgroup-analysis" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-apa-note="Some subgroups didn't have enough representation due to the nature of MEPS data">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-subgroup-analysis-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;3: Relationship between Insurance Level and Exposure to Psychiatric Drugs based on Income Level
+</figcaption>
+<div aria-describedby="tbl-subgroup-analysis-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<div class="tabwid"><style>.cl-1b144090{}.cl-1b1193d6{font-family:'Helvetica';font-size:10pt;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-1b1193e0{font-family:'Helvetica';font-size:10pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-1b12a848{margin:0;text-align:center;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-1b12b3ce{width:1.188in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1b12b3d8{width:2.194in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1b12b3d9{width:2.137in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1b12b3da{width:1.188in;background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1b12b3e2{width:2.194in;background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1b12b3e3{width:2.137in;background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1b12b3ec{width:1.188in;background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0.75pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1b12b3ed{width:2.194in;background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0.75pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1b12b3f6{width:2.137in;background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0.75pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1b12b3f7{width:1.188in;background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0.75pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1b12b3f8{width:2.194in;background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0.75pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1b12b400{width:2.137in;background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0.75pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1b12b401{width:1.188in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0.75pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1b12b40a{width:2.194in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0.75pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1b12b40b{width:2.137in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0.75pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-1b144090"><thead><tr style="overflow-wrap:break-word;"><th class="cl-1b12b3ce"><p class="cl-1b12a848"><span class="cl-1b1193d6">Income Level</span></p></th><th class="cl-1b12b3d8"><p class="cl-1b12a848"><span class="cl-1b1193d6">Chi-Square / Fisher's p-value</span></p></th><th class="cl-1b12b3d9"><p class="cl-1b12a848"><span class="cl-1b1193d6">n (Exposed to Psych Drugs)</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-1b12b3da"><p class="cl-1b12a848"><span class="cl-1b1193e0">Poor/Negative</span></p></td><td class="cl-1b12b3e2"><p class="cl-1b12a848"><span class="cl-1b1193e0">0.041</span></p></td><td class="cl-1b12b3e3"><p class="cl-1b12a848"><span class="cl-1b1193e0">697</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-1b12b3ec"><p class="cl-1b12a848"><span class="cl-1b1193e0">Near Poor</span></p></td><td class="cl-1b12b3ed"><p class="cl-1b12a848"><span class="cl-1b1193e0">0.527</span></p></td><td class="cl-1b12b3f6"><p class="cl-1b12a848"><span class="cl-1b1193e0">223</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-1b12b3ec"><p class="cl-1b12a848"><span class="cl-1b1193e0">Low Income</span></p></td><td class="cl-1b12b3ed"><p class="cl-1b12a848"><span class="cl-1b1193e0">0.008</span></p></td><td class="cl-1b12b3f6"><p class="cl-1b12a848"><span class="cl-1b1193e0">580</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-1b12b3f7"><p class="cl-1b12a848"><span class="cl-1b1193e0">Middle Income</span></p></td><td class="cl-1b12b3f8"><p class="cl-1b12a848"><span class="cl-1b1193e0">0.010</span></p></td><td class="cl-1b12b400"><p class="cl-1b12a848"><span class="cl-1b1193e0">1,046</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-1b12b401"><p class="cl-1b12a848"><span class="cl-1b1193e0">High Income</span></p></td><td class="cl-1b12b40a"><p class="cl-1b12a848"><span class="cl-1b1193e0">0.004</span></p></td><td class="cl-1b12b40b"><p class="cl-1b12a848"><span class="cl-1b1193e0">1,472</span></p></td></tr></tbody></table></div>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>Subgroup analyses stratified by income level showed that the association between insurance coverage and psychiatric drug exposure remained statistically significant in all income groups except for the Near Poor category (<a href="#tbl-subgroup-analysis" class="quarto-xref">Table&nbsp;3</a>).</p>
+<p>For example, among individuals in the <strong>Poor/Negative</strong> category, the chi-square test indicated a significant association <em>p</em> = 0.041, suggesting that psychiatric drug exposure differs by insurance coverage in this income level. Similarly, in the <strong>Near Poor</strong> category, the relationship between insurance level and psychiatric drug exposure remained significant <em>p</em> = 0.008, reinforcing the role of insurance coverage in determining psychiatric medication access. For the <strong>Low Income</strong> group, a statistically significant association was observed <em>p</em> = 0.010, indicating that psychiatric drug exposure varied across different insurance statuses. Likewise, in the <strong>Middle Income</strong> category, the chi-square test remained statistically significant <em>p</em> = 0.004, further supporting the notion that individuals with different insurance statuses experience varying levels of access to psychiatric medication. In contrast, the <strong>High Income</strong> category did not show a statistically significant association <em>p</em> = 0.527, implying that insurance coverage might not play a decisive role in psychiatric drug exposure within this income level.</p>
+</section>
+<section id="logistic-regression-results" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="logistic-regression-results"><span class="header-section-number">3.4</span> Logistic Regression Results</h2>
+<section id="population" class="level3" data-number="3.4.1">
+<h3 data-number="3.4.1" class="anchored" data-anchor-id="population"><span class="header-section-number">3.4.1</span> &lt;65 Population</h3>
+<div class="cell" data-apa-note="Reference group is <65 Uninsured (OR = 1.00)">
+<div id="tbl-log-reg-under65" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-apa-note="Reference group is <65 Uninsured (OR = 1.00)">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-log-reg-under65-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;4: Logistic Regression between Insurance Level and Exposure to Psych Drugs with under 65
+</figcaption>
+<div aria-describedby="tbl-log-reg-under65-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<div class="tabwid"><style>.cl-1b353f0c{}.cl-1b328924{font-family:'Helvetica';font-size:11pt;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-1b32892e{font-family:'Helvetica';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-1b32894c{font-family:'Helvetica';font-size:11pt;font-weight:normal;font-style:italic;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-1b339f58{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-1b339f62{margin:0;text-align:center;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-1b33ab88{width:1.827in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1b33ab92{width:0.583in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1b33ab93{width:1.38in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1b33ab94{width:1.372in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1b33ab9c{width:0.82in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1b33ab9d{width:1.827in;background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1b33ab9e{width:0.583in;background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1b33aba6{width:1.38in;background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1b33aba7{width:1.372in;background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1b33abb0{width:0.82in;background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1b33abb1{width:1.827in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0.75pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1b33abd8{width:0.583in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0.75pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1b33abd9{width:1.38in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0.75pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1b33abe2{width:1.372in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0.75pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1b33abe3{width:0.82in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0.75pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-1b353f0c"><thead><tr style="overflow-wrap:break-word;"><th class="cl-1b33ab88"><p class="cl-1b339f58"><span class="cl-1b328924">Insurance Level</span></p></th><th class="cl-1b33ab92"><p class="cl-1b339f58"><span class="cl-1b328924">OR</span></p></th><th class="cl-1b33ab93"><p class="cl-1b339f58"><span class="cl-1b328924">95% CI (Lower)</span></p></th><th class="cl-1b33ab94"><p class="cl-1b339f58"><span class="cl-1b328924">95% CI (Upper)</span></p></th><th class="cl-1b33ab9c"><p class="cl-1b339f58"><span class="cl-1b328924">p-value</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-1b33ab9d"><p class="cl-1b339f58"><span class="cl-1b32892e">&lt;65 Uninsured</span></p></td><td class="cl-1b33ab9e"><p class="cl-1b339f62"><span class="cl-1b32892e">1.00</span></p></td><td class="cl-1b33aba6"><p class="cl-1b339f62"><span class="cl-1b32892e">—</span></p></td><td class="cl-1b33aba7"><p class="cl-1b339f62"><span class="cl-1b32892e">—</span></p></td><td class="cl-1b33abb0"><p class="cl-1b339f62"><span class="cl-1b32894c">—</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-1b33abb1"><p class="cl-1b339f58"><span class="cl-1b32892e">&lt;65 Any Private/Public</span></p></td><td class="cl-1b33abd8"><p class="cl-1b339f62"><span class="cl-1b32892e">2.10</span></p></td><td class="cl-1b33abd9"><p class="cl-1b339f62"><span class="cl-1b32892e">1.607</span></p></td><td class="cl-1b33abe2"><p class="cl-1b339f62"><span class="cl-1b32892e">2.796</span></p></td><td class="cl-1b33abe3"><p class="cl-1b339f62"><span class="cl-1b32894c">&lt; .001</span></p></td></tr></tbody></table></div>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p><a href="#tbl-log-reg-under65" class="quarto-xref">Table&nbsp;4</a> presents logistic regression results for the <strong>under 65 population</strong>. The odds of psychiatric drug exposure for individuals with <strong>&lt;65 Any Private/Public</strong> are <strong>2.10</strong> times that of the reference group, with a <strong>95% CI</strong> of (1.61, 2.80) and <em>p</em> = &lt; .001.</p>
+</section>
+<section id="population-1" class="level3" data-number="3.4.2">
+<h3 data-number="3.4.2" class="anchored" data-anchor-id="population-1"><span class="header-section-number">3.4.2</span> 65+ Population</h3>
+<div class="cell" data-apa-note="Reference group is 65+ Uninsured (OR = 1.00)">
+<div id="tbl-log-reg-65over" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-apa-note="Reference group is 65+ Uninsured (OR = 1.00)">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-log-reg-65over-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;5: Logistic Regression Results for Medicare Presence on Psychiatric Drug Exposure for 65+
+</figcaption>
+<div aria-describedby="tbl-log-reg-65over-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<div class="tabwid"><style>.cl-1b661064{}.cl-1b63415e{font-family:'Helvetica';font-size:11pt;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-1b63417c{font-family:'Helvetica';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-1b634186{font-family:'Helvetica';font-size:11pt;font-weight:normal;font-style:italic;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-1b64617e{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-1b64617f{margin:0;text-align:center;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-1b646cf0{width:1.742in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1b646cfa{width:0.668in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1b646d04{width:1.38in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1b646d05{width:1.372in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1b646d22{width:0.82in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1b646d23{width:1.742in;background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1b646d24{width:0.668in;background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1b646d2c{width:1.38in;background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1b646d2d{width:1.372in;background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1b646d2e{width:0.82in;background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1b646d36{width:1.742in;background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0.75pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1b646d37{width:0.668in;background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0.75pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1b646d40{width:1.38in;background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0.75pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1b646d41{width:1.372in;background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0.75pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1b646d42{width:0.82in;background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0.75pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1b646d43{width:1.742in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0.75pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1b646d4a{width:0.668in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0.75pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1b646d5e{width:1.38in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0.75pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1b646d5f{width:1.372in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0.75pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1b646d60{width:0.82in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0.75pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-1b661064"><thead><tr style="overflow-wrap:break-word;"><th class="cl-1b646cf0"><p class="cl-1b64617e"><span class="cl-1b63415e">Insurance Level</span></p></th><th class="cl-1b646cfa"><p class="cl-1b64617e"><span class="cl-1b63415e">OR</span></p></th><th class="cl-1b646d04"><p class="cl-1b64617e"><span class="cl-1b63415e">95% CI (Lower)</span></p></th><th class="cl-1b646d05"><p class="cl-1b64617e"><span class="cl-1b63415e">95% CI (Upper)</span></p></th><th class="cl-1b646d22"><p class="cl-1b64617e"><span class="cl-1b63415e">p-value</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-1b646d23"><p class="cl-1b64617e"><span class="cl-1b63417c">65+ without Medicare</span></p></td><td class="cl-1b646d24"><p class="cl-1b64617f"><span class="cl-1b63417c">1.00</span></p></td><td class="cl-1b646d2c"><p class="cl-1b64617f"><span class="cl-1b63417c">—</span></p></td><td class="cl-1b646d2d"><p class="cl-1b64617f"><span class="cl-1b63417c">—</span></p></td><td class="cl-1b646d2e"><p class="cl-1b64617f"><span class="cl-1b634186">—</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-1b646d36"><p class="cl-1b64617e"><span class="cl-1b63417c">65+ with Medicare</span></p></td><td class="cl-1b646d37"><p class="cl-1b64617f"><span class="cl-1b63417c">1.972</span></p></td><td class="cl-1b646d40"><p class="cl-1b64617f"><span class="cl-1b63417c">1.119</span></p></td><td class="cl-1b646d41"><p class="cl-1b64617f"><span class="cl-1b63417c">3.757</span></p></td><td class="cl-1b646d42"><p class="cl-1b64617f"><span class="cl-1b634186">0.027</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-1b646d43"><p class="cl-1b64617e"><span class="cl-1b63417c">(Intercept)</span></p></td><td class="cl-1b646d4a"><p class="cl-1b64617f"><span class="cl-1b63417c">0.206</span></p></td><td class="cl-1b646d5e"><p class="cl-1b64617f"><span class="cl-1b63417c">0.109</span></p></td><td class="cl-1b646d5f"><p class="cl-1b64617f"><span class="cl-1b63417c">0.362</span></p></td><td class="cl-1b646d60"><p class="cl-1b64617f"><span class="cl-1b634186">&lt; .001</span></p></td></tr></tbody></table></div>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p><a href="#tbl-log-reg-65over" class="quarto-xref">Table&nbsp;5</a> presents logistic regression results for the <strong>65 over population</strong>. The odds of psychiatric drug exposure for individuals with <strong>65+ with Medicare</strong> are <strong>1.97</strong> times that of the reference group, with a <strong>95% CI</strong> of (1.12, 3.76) and <em>p</em> = .027..</p>
+</section>
+</section>
+<section id="psychiatric-drug-exposure-by-insurance-level" class="level2" data-number="3.5">
+<h2 data-number="3.5" class="anchored" data-anchor-id="psychiatric-drug-exposure-by-insurance-level"><span class="header-section-number">3.5</span> Psychiatric Drug Exposure by Insurance Level</h2>
+<div class="cell" data-apa-note="Income levels were designated by MEPS guidelines">
+<div class="cell-output-display">
+<div id="fig-facet" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-facet-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="insurance-psychexposure_files/figure-html/fig-facet-1.png" class="img-fluid figure-img" width="1152">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-facet-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Exposure to psychiatric drugs by income level and insurance level
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p><a href="#fig-facet" class="quarto-xref">Figure&nbsp;1</a> visualizes psychiatric drug exposure proportions by <strong>insurance level</strong> and <strong>income group</strong>.</p>
+<p>Individuals with private/public insurance consistently had <strong>higher psychiatric drug exposure</strong> across all income levels except for the Near Poor group. Notably, psychiatric drug exposure was lowest among the <strong>uninsured</strong>, supporting the hypothesis that lack of insurance acts as a barrier to accessing psychiatric treatment.</p>
+</section>
+<section id="psychiatric-drug-exposure-by-age-group" class="level2" data-number="3.6">
+<h2 data-number="3.6" class="anchored" data-anchor-id="psychiatric-drug-exposure-by-age-group"><span class="header-section-number">3.6</span> Psychiatric Drug Exposure by Age Group</h2>
+<div class="cell" data-apa-note="Insurance levels were grouped differently due to small sample size and lack of details regarding what type of private or public insurance individual has.">
+<div class="cell-output-display">
+<div id="fig-psych-insurc" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-psych-insurc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="insurance-psychexposure_files/figure-html/fig-psych-insurc-1.png" class="img-fluid figure-img" width="1152">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-psych-insurc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: Psychiatric Drug Exposure by Insurance Coverage
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p><a href="#fig-psych-insurc" class="quarto-xref">Figure&nbsp;2</a> is a stacked bar plot that visualizes psychiatric drug exposure proportions by <strong>insurance level</strong> using three Insurance Level groups.</p>
+<p>In both age groups <strong>(&lt;65 and 65+)</strong>, the proportion of individuals who have insurance have higher exposure to psychiatric drugs than those who are uninsured.</p>
+</section>
+<section id="psychiatric-drug-prescription-by-age-and-sex" class="level2" data-number="3.7">
+<h2 data-number="3.7" class="anchored" data-anchor-id="psychiatric-drug-prescription-by-age-and-sex"><span class="header-section-number">3.7</span> Psychiatric Drug Prescription by Age and Sex</h2>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-age-sex" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-age-sex-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="insurance-psychexposure_files/figure-html/fig-age-sex-1.png" class="img-fluid figure-img" width="1344">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-age-sex-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: Psychiatric Drug Exposure by Age and Sex
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p><a href="#fig-age-sex" class="quarto-xref">Figure&nbsp;3</a> illustrates the distribution of <strong>psychiatric drug prescriptions</strong> by <strong>age group</strong> and <strong>sex</strong>.</p>
+<p>Consistent with previous findings, <strong>females</strong> appear slightly more likely than males to receive psychiatric medications. While most individuals receive <strong>0–2 psychiatric drugs</strong>, a small subset receives a significantly higher number, indicating <strong>potential polypharmacy</strong> among certain individuals</p>
+</section>
+<section id="age-and-number-of-psychiatric-diagnosis" class="level2" data-number="3.8">
+<h2 data-number="3.8" class="anchored" data-anchor-id="age-and-number-of-psychiatric-diagnosis"><span class="header-section-number">3.8</span> Age and Number of Psychiatric Diagnosis</h2>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-age-psychcond" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-age-psychcond-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="insurance-psychexposure_files/figure-html/fig-age-psychcond-1.png" class="img-fluid figure-img" width="1344">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-age-psychcond-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4: Number of Psychiatric Conditions by Age
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p><a href="#fig-age-psychcond" class="quarto-xref">Figure&nbsp;4</a> displays the relationship between <strong>age</strong> and <strong>number of psychiatric diagnoses</strong>.</p>
+<p>Across all ages, psychiatric diagnoses were most frequently <strong>0 or 1</strong>, suggesting that multiple diagnoses were uncommon in this population. The nearly flat regression line suggests that <strong>age does not strongly predict the number of psychiatric diagnoses</strong>.</p>
+
+</section>
+</section>
+
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-baickeretal_2018_effect" class="csl-entry" role="listitem">
+Baicker, Katherine, Heidi L. Allen, Bill J. Wright, Sarah L. Taubman, and Amy N. Finkelstein. 2018. <span>“The <span>Effect</span> of <span>Medicaid</span> on <span>Management</span> of <span>Depression</span>: <span>Evidence From</span> the <span>Oregon Health Insurance Experiment</span>.”</span> <em>The Milbank Quarterly</em> 96 (1): 29–56. <a href="https://doi.org/10.1111/1468-0009.12311">https://doi.org/10.1111/1468-0009.12311</a>.
+</div>
+<div id="ref-dongetal_2021_comparison" class="csl-entry" role="listitem">
+Dong, Xiaobei, Chi Chun Steve Tsang, Anoop Kotian, Jason Zeng, Michael Tran, and Junling Wang. 2021. <span>“A Comparison Between the Effects of Drug Costs and Share of Family Income on Drug Costs in Determining Drug Price.”</span> <em>Medicine</em> 100 (31): e26877. <a href="https://doi.org/10.1097/MD.0000000000026877">https://doi.org/10.1097/MD.0000000000026877</a>.
+</div>
+<div id="ref-donohuefrank_2007_estimating" class="csl-entry" role="listitem">
+Donohue, Julie Marie, and Richard Gabriel Frank. 2007. <span>“Estimating <span>Medicare Part D</span>’s <span>Impact</span> on <span>Medication Access Among Dually Eligible Beneficiaries With Mental Disorders</span>.”</span> <em>Psychiatric Services</em> 58 (10): 1285–91. <a href="https://doi.org/10.1176/ps.2007.58.10.1285">https://doi.org/10.1176/ps.2007.58.10.1285</a>.
+</div>
+<div id="ref-fungetal_2013_adverse" class="csl-entry" role="listitem">
+Fung, Vicki, Mary Price, Alisa B. Busch, Mary Beth Landrum, Bruce Fireman, Andrew Nierenberg, William H. Dow, et al. 2013. <span>“Adverse <span>Clinical Events Among Medicare Beneficiaries Using Antipsychotic Drugs</span>: <span>Linking Health Insurance Benefits</span> and <span>Clinical Needs</span>.”</span> <em>Medical Care</em> 51 (7): 614–21. <a href="https://doi.org/10.1097/MLR.0b013e31829019c5">https://doi.org/10.1097/MLR.0b013e31829019c5</a>.
+</div>
+<div id="ref-kniftoninglis__poverty" class="csl-entry" role="listitem">
+Knifton, Lee, and Greig Inglis. n.d. <span>“Poverty and Mental Health: Policy, Practice and Research Implications.”</span> <em>BJPsych Bulletin</em> 44 (5): 193–96. Accessed March 10, 2025. <a href="https://doi.org/10.1192/bjb.2020.78">https://doi.org/10.1192/bjb.2020.78</a>.
+</div>
+<div id="ref-marbinetal_2022_perspectives" class="csl-entry" role="listitem">
+Marbin, Derin, Stefan Gutwinski, Stefanie Schreiter, and Andreas Heinz. 2022. <span>“Perspectives in Poverty and Mental Health.”</span> <em>Frontiers in Public Health</em> 10 (August): 975482. <a href="https://doi.org/10.3389/fpubh.2022.975482">https://doi.org/10.3389/fpubh.2022.975482</a>.
+</div>
+<div id="ref-__medical" class="csl-entry" role="listitem">
+<span>“Medical <span>Expenditure Panel Survey Household Component Sample Sizes</span>.”</span> n.d. https://meps.ahrq.gov/survey_comp/hc_sample_size.jsp. Accessed March 12, 2025.
+</div>
+<div id="ref-pateletal_2010_reducing" class="csl-entry" role="listitem">
+PATEL, VIKRAM, MARIO MAJ, ALAN J. FLISHER, MARY J. DE SILVA, MIRJA KOSCHORKE, and MARTIN PRINCE. 2010. <span>“<a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2953637">Reducing the Treatment Gap for Mental Disorders: A <span>WPA</span> Survey</a>.”</span> <em>World Psychiatry</em> 9 (3): 169–76.
+</div>
+<div id="ref-sarmaetal_2007_influence" class="csl-entry" role="listitem">
+Sarma, Sisira, Kisalaya Basu, and Anil Gupta. 2007. <span>“The Influence of Prescription Drug Insurance on Psychotropic and Non-Psychotropic Drug Utilization in <span>Canada</span>.”</span> <em>Social Science &amp; Medicine</em> 65 (12): 2553–65. <a href="https://doi.org/10.1016/j.socscimed.2007.07.015">https://doi.org/10.1016/j.socscimed.2007.07.015</a>.
+</div>
+</div></section><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
+<ol>
+<li id="fn1"><p><span class="citation" data-cites="__medical">(<a href="#ref-__medical" role="doc-biblioref"><span>“Medical <span>Expenditure Panel Survey Household Component Sample Sizes</span>”</span> n.d.</a>)</span><a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section></div></main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

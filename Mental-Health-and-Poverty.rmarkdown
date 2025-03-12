@@ -16,18 +16,20 @@ keywords: [MEPS, Medical Expenditure Panel Survey, Mental Health, Poverty, Presc
 author-note:
 disclosures:
 conflict of interest: The author has no conflict of interest to declare.
-format:
+format: html
 bibliography: bibliography.bib
 apaquarto-html: default
 apaquarto-pdf: default
 ---
 
+
+
 # Introduction
-Mental health disorders pose a significant global challenge, with more than half of individuals suffering from mental illnesses lacking access to proper care [@pateletal_2010_reducing]. This treatment gap is widespread across nations but disproportionately affects individuals in lower-income brackets. The relationship between poverty, mental health, and social risks—including stress, stigma, and unemployment—has been extensively studied, revealing a cyclical interaction in which mental illness can lead to financial hardship while economic instability exacerbates psychiatric conditions (Knifton & Inglis, 2020). Despite the heightened risk of psychiatric disorders among socioeconomically disadvantaged populations, significant barriers—including financial constraints, lack of insurance, and limited healthcare access—impede treatment utilization (Dong et al., 2021).
+Mental health disorders pose a significant global challenge, with more than half of individuals suffering from mental illnesses lacking access to proper care [@pateletal_2010_reducing]. This treatment gap is widespread across nations but disproportionately affects individuals in lower-income brackets. The relationship between poverty, mental health, and social risks including stress, stigma, and unemployment has been extensively studied, revealing a cyclical interaction in which mental illness can lead to financial hardship while economic instability exacerbates psychiatric conditions [@kniftoninglis__poverty]. Studies have shown that income inequality also has been linked to heightened mental disorder problems in developed countries [@marbinetal_2022_perspectives]. Despite the heightened risk of psychiatric disorders among socioeconomically disadvantaged populations, significant barriers including financial constraints, lack of insurance, and limited healthcare access impede treatment utilization [@dongetal_2021_comparison].
 
-One of the primary obstacles to mental healthcare access is the cost of psychiatric medications, which constitute a substantial portion of healthcare expenditures (Dong et al., 2021). The rising cost of psychotropic drugs has placed an increasing financial burden on low-income families, leading to a higher prevalence of unmet healthcare needs (Knifton & Inglis, 2020). Insurance coverage plays a crucial role in mitigating these disparities, as research has shown that expanding coverage improves access to prescription medications. For example, a 2018 study in Oregon found that Medicaid coverage reduced the prevalence of untreated depression by over 60%, while increasing the use of antidepressants and other psychiatric medications (McConnell et al., 2018). Similarly, the Medicare Improvement for Patients and Providers Act of 2008 facilitated greater psychotropic medication use by reducing the cost burden of prescriptions (Polinski et al., 2010). These findings underscore the importance of financial barriers in psychiatric medication adherence, highlighting the role of insurance policies in reducing disparities in mental healthcare access.
+The treatment of mental disorders have increasingly geared toward reliance on psychotropic drugs, given its easier accessibility compared to in-patient care or regular office visits [@donohuefrank_2007_estimating]. One of the primary obstacles to mental healthcare access is the cost of psychiatric medications, which constitute a substantial portion of healthcare expenditures [@dongetal_2021_comparison]. The rising cost of psychotropic drugs has placed an increasing financial burden on low-income families, leading to a higher prevalence of unmet healthcare needs [@sarmaetal_2007_influence]. Insurance coverage plays a crucial role in mitigating these disparities, as research has shown that expanding coverage improves access to prescription medications. For example, a 2018 study in Oregon found that Medicaid coverage reduced the prevalence of untreated depression by over 60%, while increasing the use of antidepressants and other psychiatric medications [@baickeretal_2018_effect]. Similarly, studies have found that cost-sharing declines psychotropic drug usage, even in cases where usage is necessary for patients[@fungetal_2013_adverse]. These findings underscore the importance of financial barriers in psychiatric medication adherence, highlighting the role of insurance policies in reducing disparities in mental healthcare access.
 
-Given the critical role of insurance coverage in determining psychiatric drug access, this study examines the following research question: What is the relationship between insurance coverage and exposure to psychiatric drugs? Based on prior research, the study hypothesizes that individuals with comprehensive insurance coverage will have greater exposure to psychiatric medications compared to those with limited or no insurance.
+Given the critical role of insurance coverage in determining psychiatric drug access, this study examines the following research question: **What is the relationship between insurance coverage and exposure to psychiatric drugs?** Based on prior research, the study hypothesizes that individuals with comprehensive insurance coverage will have greater exposure to psychiatric medications compared to those with limited or no insurance.
 
 This study utilizes data from the Medical Expenditure Panel Survey (MEPS) to investigate the association between insurance coverage and psychiatric drug exposure, obtained from the Prescribed Medicine File. The primary outcome variable, psychiatric drug exposure, is defined as a binary indicator of whether an individual was prescribed psychiatric medication, as reported by the household and confirmed by a pharmacy with individual consent. The key predictor variable, insurance coverage, is categorized into private insurance, public insurance (Medicaid, Medicare), and uninsured status. Several covariates that may influence psychiatric drug exposure are also considered, including:
 
@@ -59,10 +61,10 @@ Age groups were categorized as **<65 years** and **65+ years** to align with Med
 ## Key Variables
 - **Outcome Variable:** Psychiatric drug exposure (Yes/No)
 - **Independent Variable:** Insurance coverage status, categorized as:
-  - **<65 Uninsured**
-  - **<65 Any Private/Public**
-  - **65+ without Medicare**
-  - **65+ with Medicare**
+  - <65 Uninsured
+  - <65 Any Private/Public
+  - 65+ without Medicare
+  - 65+ with Medicare
 - **Covariates:**
   - Age
   - Sex
@@ -83,9 +85,10 @@ All analyses were conducted using **R version 2024.12.0+467** with the `tidyvers
 
 # Results
 
+
 ```{r}
-#| label: Setting up the quarto for data cleaning
-#| echo: false
+#| label: sourcing-data
+#| include: false
 
 library(readr) #Run for every new R session
 
@@ -97,12 +100,11 @@ source ("data-wrangling/Merged h243 and h241.R")
 
 #Source all 
 source ("data-wrangling/Added h239a to data.R")
-
 ```
 
 ```{r}
-#| label: Load packages for descriptive statistics and relevant R Script 
-#| echo: false 
+#| label: load-packages
+#| include: false 
 
 #install.packages("gtsummary") #commented out the install function so it doesn't install everytime
 #install.packages("flextable")
@@ -123,13 +125,12 @@ library(papaja) # general APA friendly stuff, but old and not always quarto-frie
 # and papaja's one (for plots) isn't very reliable; we want flextable's (for tables) to override ("mask") it
 library(flextable) # yet another APA table option
 
-
 source("functions.R")
 ```
 
 ```{r}
 #| label: analysis-preferences
-#| echo: false
+#| include: false
 
 # Seed for random number generation
 set.seed(24)
@@ -145,11 +146,15 @@ knitr::opts_chunk$set(
   )
 ```
 
+
+
 ## Descriptive Statistics
 
+
+
 ```{r}
-#| label: Descriptive Statistics by exposure to psychiatric drugs 
-#| echo: false 
+#| label: descriptive-stat-data
+#| include: false 
 
 # Generate descriptive statistics by psychiatric drug exposure
 table1 <- clean_data %>%
@@ -178,28 +183,29 @@ colnames(table1) <- c("Variable", "No Exposure (%)", "Exposed (%)")
 ```
 
 ```{r}
-#| label: Descriptive Statistics Table
-#| fig-cap: "Descriptive statistics by exposure to psychiatric drugs"
-#| echo: true
+#| label: tbl-descriptive-stat
+#| tbl-cap: "Descriptive statistics by exposure to psychiatric drugs"
+#| echo: false
 
 # Format the table with APA-style formatting
 table1 %>%
-  kable("html", 
-        caption = "Table 1: Descriptive Statistics by Psychiatric Drug Exposure") %>%
+  kable("html") %>%
   kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover")) %>%
   pack_rows("Age", 1, 1) %>%
   pack_rows("Sex", 2, 3) %>%
   pack_rows("Race/Ethnicity", 4, 8) %>%
   pack_rows("Income Level", 9, 13) %>%
   add_indent(c(2:3, 4:8, 9:13))  # Indent subcategories
-
-table1
 ```
-Table 1 presents **descriptive statistics** for the study population by psychiatric drug exposure status. Individuals exposed to psychiatric drugs were more likely to be older, female, and from **higher-income groups**.
+
+
+@tbl-descriptive-stat presents **descriptive statistics** for the study population by psychiatric drug exposure status. Individuals exposed to psychiatric drugs were more likely to be older, female, and from **higher-income groups**.
+
+
 
 ```{r}
-#|label: Age Categorize
-#|echo: false
+#| label: age-category
+#| include: false
 
 #Make Age a Categorical Variable 
 clean_data <- clean_data %>%
@@ -211,17 +217,25 @@ clean_data <- clean_data %>%
         AGE31X >= 65 ~ "65+")))
 ```
 
+
+
 ## Chi-Square Test Results
+
+
 ```{r}
-#| label: Chi-Square Test Table Preparation
-#| echo: false
+#| label: run-chi-square
+#| include: false
 
 # Run Chi-Square tests
 sex_chi <- chisq.test(table(clean_data$SEX, clean_data$exposure_psych_drugs))
 race_chi <- chisq.test(table(clean_data$RACETHX, clean_data$exposure_psych_drugs))
 age_chi <- chisq.test(table(clean_data$AGE_GROUP, clean_data$exposure_psych_drugs))  # Use AGE_GROUP instead of Age
 pov_chi <- chisq.test(table(clean_data$POVCAT22, clean_data$exposure_psych_drugs))
+```
 
+```{r}
+#| label: chi-square-df
+#| include: false
 # Create a data frame with results
 chi_square_bygroup <- data.frame(
   Variable = c("Sex", "Race/Ethnicity", "Age Group", "Poverty Level"),
@@ -232,17 +246,16 @@ chi_square_bygroup <- data.frame(
 
 # Format p-values for APA style
 chi_square_bygroup$p_value <- as.character(ifelse(chi_square_bygroup$p_value < .001, "< .001", round(chi_square_bygroup$p_value, 3)))
-
 ```
 
 ```{r}
-#| label: Make Table for Chi-Square Test
-#| fig-cap: "Relationship between Insurance Level and Exposure to Psychiatric Drugs based on Covariates"
-#| echo: true
+#| label: tbl-chi-square
+#| tbl-cap: "Relationship between Insurance Level and Exposure to Psychiatric Drugs based on Covariates"
+#| apa-note: 
+#| echo: false
 
 # Make APA-style Chi-Square Test Table
 chi_square_table <- flextable(chi_square_bygroup) %>%
-  set_caption("Table 2\nChi-Square Test Results for Psychiatric Drug Exposure") %>%
   theme_vanilla() %>%
   bold(part = "header") %>%
   align(align = "center", part = "body") %>%
@@ -254,14 +267,17 @@ chi_square_table <- flextable(chi_square_bygroup) %>%
 # Print the table
 chi_square_table
 ```
+
+
 Chi-square tests indicated significant differences in **psychiatric drug exposure** across sex, race/ethnicity, age group, and poverty level (Table 2).
 
 
 ## Subgroup Chi-Square Analysis
-```{r}
-#| label: Subgroup Analysis and n-value 
-#| echo: false 
 
+
+```{r}
+#| label: sub-group-chisq 
+#| include: false 
 # Make wide table
 summary_table <- clean_data %>%
   group_by(POVCAT22, INSURC22, exposure_psych_drugs) %>%
@@ -269,7 +285,6 @@ summary_table <- clean_data %>%
   tidyr::pivot_wider(names_from = exposure_psych_drugs, values_from = count, values_fill = 0)
 
 # Chi-square test within each income level and Fischer's exact for smaller values  
-
 subgroup_chisq <- clean_data %>%
   group_by(POVCAT22) %>%
   summarise(
@@ -286,7 +301,11 @@ n_values <- clean_data %>%
   filter(exposure_psych_drugs == "Yes") %>%
   group_by(POVCAT22) %>%
   summarise(n = n(), .groups = "drop")
+```
 
+```{r}
+#| label: sub-group-format
+#| include: false 
 # Merge the "n" values with chi-square results
 subgroup_chisq <- subgroup_chisq %>%
   left_join(n_values, by = "POVCAT22")
@@ -305,15 +324,14 @@ subgroup_chisq <- subgroup_chisq %>%
 ```
 
 ```{r}
-#| label: Subgroup Analysis and n-value table
-#| fig-cap: "Table 3: Relationship between Insurance Level and Exposure to Psychiatric Drugs based on Income Level"
-#| echo: true
-
+#| label: tbl-subgroup-analysis
+#| tbl-cap: "Relationship between Insurance Level and Exposure to Psychiatric Drugs based on Income Level"
+#| apa-note: "Some subgroups didn't have enough representation due to the nature of MEPS data"
+#| include: false
 
 # Create APA-style table with "n" values
 table3 <- subgroup_chisq %>%
   flextable() %>%
-  set_caption("Table 3: Subgroup Chi-Square for Income Level") %>%
   theme_vanilla() %>%  # APA-style theme
   bold(part = "header") %>%  # Make headers bold
   align(align = "center", part = "all") %>%  # Center align all content
@@ -322,15 +340,17 @@ table3 <- subgroup_chisq %>%
   width(j = 3, width = 2) %>%  # Adjust df column width
   autofit()
 
-print(table3)
+table3
 ```
-Table 3 presents subgroup analyses stratified by **income level**. The association between insurance coverage and psychiatric drug exposure remained significant in **all income groups** except the **Near Poor** category.
+
+
+@tbl-subgroup-analysis presents subgroup analyses stratified by **income level**. The association between insurance coverage and psychiatric drug exposure remained significant in **all income groups** except the **Near Poor** category.
 
 
 
 ```{r}
-#| label: Changing names for consistency and regrouping of insurance levels 
-#| echo: false 
+#| label: change-insurance-level
+#| include: false 
 clean_data <- clean_data %>%
   mutate(INSURC22 = case_when(
     INSURC22 %in% c("<65 Any Private", "<65 Public Only") ~ "<65 Any Private/Public",
@@ -340,21 +360,22 @@ clean_data <- clean_data %>%
   )) %>%
   mutate(INSURC22 = factor(INSURC22))
 
-
 #Reoder levels
 clean_data <- clean_data %>%
   mutate(INSURC22 = factor(INSURC22, levels = c(
     "<65 Uninsured", "<65 Any Private/Public", "65+ Uninsured", "65+ No Medicare and Any Private/Public", "65+ Medicare Only","65+ Medicare and Any Private/Public"
   )))
-
-
 ```
+
+
 
 ## Logistic Regression Results
 ### <65 Population
+
+
 ```{r}
-#| label: Logistic Regression between Insurance Level and Exposure to Psych Drugs with <65 Data Preparation
-#| echo: false 
+#| label: log-reg-under65
+#| include: false 
 
 # Separate into 65 under
 data_under65 <- clean_data %>% filter(AGE_GROUP != "65+")  # OR AGE_GROUP == "<65"
@@ -368,7 +389,11 @@ data_under65_filtered$INSURC22 <- factor(data_under65_filtered$INSURC22,
 
 # Run logistic regression using the filtered dataset
 logit_model_under65 <- glm(exposure_psych_drugs ~ INSURC22, data = data_under65_filtered, family = binomial)
+```
 
+```{r}
+#| label: format-log-reg-under65
+#| include: false 
 # Extract and format results for APA style
 logit_results_under65 <- broom::tidy(logit_model_under65, exponentiate = TRUE, conf.int = TRUE) %>%
   select(term, estimate, conf.low, conf.high, p.value) %>%
@@ -387,7 +412,11 @@ logit_results_under65 <- broom::tidy(logit_model_under65, exponentiate = TRUE, c
       `p-value` < 0.001 ~ "< .001",
       TRUE ~ sprintf("%.3f", `p-value`))
   )
+```
 
+```{r}
+#| label: include-ref-group
+#| include: false 
 # Convert reference group values to character to match the formatted data and remove intercept
 logit_results_under65 <- logit_results_under65 %>%
   filter(!`Insurance Level` %in% c("(Intercept)", "<65 Uninsured")) %>%  # Remove duplicates
@@ -403,14 +432,13 @@ logit_results_under65 <- logit_results_under65 %>%
 # Remove variable prefix
 logit_results_under65 <- logit_results_under65 %>%
   mutate(`Insurance Level` = gsub("INSURC22", "", `Insurance Level`))  # Remove "INSURC22"
-
 ```
 
 ```{r}
-#| label: Logistic Regression between Insurance Level and Exposure to Psych Drugs with <65
-#| echo: true 
-#| fig-cap: "Logistic Regression between Insurance Level and Exposure to Psych Drugs with <65
-
+#| label: tbl-log-reg-under65
+#| echo: false 
+#| tbl-cap: "Logistic Regression between Insurance Level and Exposure to Psych Drugs with under 65"
+ 
 # Fix APA-style logistic regression table
 logit_table_under65 <- flextable(logit_results_under65) %>%
   set_caption("Table 4\nLogistic Regression Results for <65 Insurance and Psychiatric Drug Exposure") %>%
@@ -426,13 +454,16 @@ logit_table_under65 <- flextable(logit_results_under65) %>%
 # Print table
 logit_table_under65
 ```
-Table 4 presents logistic regression results for the **<65 population**. Individuals with **any private/public insurance** had **2.31 times higher odds** of psychiatric drug exposure compared to **uninsured individuals (p < .001).**
+
+
+@tbl-log-reg-under65 presents logistic regression results for the **<65 population**. Individuals with **any private/public insurance** had **2.31 times higher odds** of psychiatric drug exposure compared to **uninsured individuals (p < .001).**
 
 ### 65+ Population
-```{r}
-#| label: Regrouping for Logistic Regression Results for Insurance Level (Two groups) and Psychiatric Drug Exposure for 65+ Data Preparation
-#| echo: false 
 
+
+```{r}
+#| label: regroup-insurance-level
+#| include: false 
 # Separate into 65+ data
 data_65plus <- clean_data %>% filter(AGE_GROUP == "65+")
 
@@ -452,8 +483,8 @@ data_65plus2 <- data_65plus2 %>%
 ```
 
 ```{r}
-#| label: Logistic Regression Results for Insurance Level (Two groups) and Psychiatric Drug Exposure for 65+ Data Preparation
-#| echo: false 
+#| label: data-prep-log-reg
+#| include: false 
 # Run logistic regression
 logit_model3 <- glm(exposure_psych_drugs ~ INSURC22, data = data_65plus2, family = binomial)
 
@@ -467,16 +498,11 @@ logit_results_65plus2 <- tidy(logit_model3, exponentiate = TRUE, conf.int = TRUE
     "95% CI (Upper)" = conf.high,
     "p-value" = p.value
   )
+```
 
-# Remove intercept row and clean insurance level names
-logit_results_65plus2 <- logit_results_65plus2 %>%
-  filter(`Insurance Level` != "(Intercept)") %>%
-  mutate(
-    `Insurance Level` = gsub("INSURC22", "", `Insurance Level`)  # Remove variable prefix
-  )
-
-
-
+```{r}
+#| label: format-log-reg-65plus
+#| include: false 
 # Ensure OR, CI, and p-value are characters for consistency
 logit_results_65plus2 <- logit_results_65plus2 %>%
   mutate(
@@ -485,8 +511,9 @@ logit_results_65plus2 <- logit_results_65plus2 %>%
     `95% CI (Upper)` = sprintf("%.3f", `95% CI (Upper)`),  # Round CI upper bound
     `p-value` = case_when(  # Format p-values properly
       `p-value` < 0.001 ~ "< .001",
-      TRUE ~ sprintf("%.3f", `p-value`)
-    )
+      TRUE ~ sprintf("%.3f", `p-value`))) %>%
+  mutate(
+    `Insurance Level` = gsub("INSURC22", "", `Insurance Level`)  # Remove variable prefix
   ) %>%
    mutate(
     OR = as.character(OR),
@@ -506,9 +533,9 @@ logit_results_65plus2 <- logit_results_65plus2 %>%
 ```
 
 ```{r}
-#| label: Logistic Regression Results for Insurance Level (Two groups) and Psychiatric Drug Exposure for 65+
-#| echo: true 
-#| fig-cap: "Logistic Regression Results for Medicare Presence on Psychiatric Drug Exposure for 65+"
+#| label: log-reg-65over
+#| echo: false 
+#| tbl-cap: "Logistic Regression Results for Medicare Presence on Psychiatric Drug Exposure for 65+"
 
 # Fix APA-style logistic regression table
 logit_table_65plus2 <- flextable(logit_results_65plus2) %>%
@@ -525,13 +552,17 @@ logit_table_65plus2 <- flextable(logit_results_65plus2) %>%
 # Print table
 logit_table_65plus2
 ```
-Table 5 shows that **65+ individuals with Medicare** had **3.89 times higher odds** of psychiatric drug exposure compared to those **without Medicare (p = .004).**
+
+
+@log-reg-65over shows that **65+ individuals with Medicare** had **3.89 times higher odds** of psychiatric drug exposure compared to those **without Medicare (p = .004).**
 
 ## Psychiatric Drug Exposure by Insurance Level
+
+
 ```{r}
-#| label: Exposure to psychiatric drugs by income level and insurance level 
+#| label: fig-facet
 #| fig-cap: "Exposure to psychiatric drugs by income level and insurance level"
-#| echo: true
+#| echo: false
 
 custom_labels <- c(
   "Poor/Negative" = "Poor/Negative",
@@ -552,8 +583,7 @@ clean_data %>%
              scales = "free_y", # Allow y-axis to be different for each facet
              labeller = labeller(POVCAT22 = custom_labels)) + # Custom facet labels
   scale_fill_manual(name = "Exposure to Psychiatric Drugs", values = c("red", "blue")) + # Renaming legend
-   labs(title = "Figure 1: Psychiatric Drug Exposure by Insurance Level Across Income Groups",
-       x = "Insurance Level", y = "Proportion Exposed", caption = "Note: Proportions are calculated within each income level.") +
+   labs(x = "Insurance Level", y = "Proportion Exposed") +
   theme_minimal() +
   theme(plot.title = element_text(size = 14, face = "bold", hjust = 0.5),
         axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1, size = 8),
@@ -562,10 +592,14 @@ clean_data %>%
         )  # Make facet labels bold
 ```
 
+
+
 ## Psychiatric Drug Exposure by Age Group
+
+
 ```{r}
-#| label: Plot of Psychiatric Drug Exposure by Insurance Coverage Data Cleaning 
-#| echo: false 
+#| label: plot2-dataclean
+#| include: false 
 
 # Create a new variable for Age Group
 clean_data2 <- clean_data %>%
@@ -588,13 +622,12 @@ clean_data2 <- clean_data2 %>%
       "65+ without Medicare",
       "65+ with Medicare"))
   )
-
 ```
 
 ```{r}
-#| label: Psychiatric Drug Exposure by Insurance Coverage 
+#| label: fig-psych-insurc
 #| fig-cap: "Psychiatric Drug Exposure by Insurance Coverage "
-#| echo: true 
+#| echo: false 
 
 # Generate the reordered faceted plot
 ggplot(clean_data2, aes(x = INSURC22, fill = as.factor(exposure_psych_drugs))) +
@@ -610,4 +643,7 @@ ggplot(clean_data2, aes(x = INSURC22, fill = as.factor(exposure_psych_drugs))) +
   facet_wrap(~ Age_Group, scales = "free_y")  # Facet by Age Group
 ```
 
+
+
 Needed to group differently due to small sample size and limitation of lack of details regarding what private/public insurance individual has. 
+

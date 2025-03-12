@@ -83,22 +83,27 @@ h239a_person_level <- h239a_coladded %>%
 h239a_person_level
     
 all_merged <- h239a_person_level %>%
-  inner_join(h241h243_merged, by = "DUPERSID")
+  inner_join(h241h243_merged, by = "DUPERSID") #Join by unique DUPERSID
+
+colnames(all_merged)
 
 all_merged$psych_drug_exposure <- ifelse(all_merged$psych_drug_count > 0, "Yes", "No")
-all_merged$psych_cond_exist <- ifelse(all_merged$psych_count > 0, "Yes", "No")
+all_merged$psych_cond_exist <- ifelse(all_merged$psych_conditions_count > 0, "Yes", "No")
+
+all_merged
 
 clean_data <- all_merged %>% 
-  select (DUPERSID, psych_drug_count, psych_count, AGE31X, RACETHX, SEX, INSURC22, POVCAT22)
+  select(DUPERSID, psych_drug_count, psych_conditions_count, AGE31X, RACETHX, SEX, INSURC22, POVCAT22) %>%
+  mutate(SEX = factor(str_to_title(as.character(SEX)))) #Change all values in SEX to capitalize first letter 
 
 print(all_merged)
 print(clean_data)
 
 #Save the all_merged file 
-write_csv(all_merged, "cleaned-data/all_merged.csv")
+write_csv(all_merged, "cleaned-data/all_merged.csv")  
 
 clean_data <- clean_data %>%
-  mutate(exposure_psych_drugs = factor(ifelse(psych_drug_count > 0, "Yes", "No")))
+  mutate(exposure_psych_drugs = factor(ifelse(psych_drug_count > 0, "Yes", "No"))) #Make new column that returns Yes, No for exposure to psychiatric drugs 
 
 print(clean_data)
 

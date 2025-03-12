@@ -40,37 +40,37 @@ h241_selected <- h241 %>%
   filter(RXCOND == 1) # Keep only rows where RXCOND (Any prescribed medicine associated with condition) is 1
 
 # Define psychiatric illness codes to filter
-psych_codes <- c("F01", "F02","F03", "F04", "F05", "F06", "F07", "F08", "F09", "F20", "F31", "F32", "F34", "F39", "F41", "F42", "F43", "F90", "F99")
+# Load necessary package
+library(stringr)
+library(dplyr)
 
-# Filter h241 for individuals with psychiatric illness
+# Create h241_filtered with psych_codes column but don't filter out rows yet
 h241_filtered <- h241_selected %>%
-  filter(ICD10CDX %in% psych_codes) %>% 
-  select(DUPERSID, ICD10CDX)
+  mutate(psych_codes = ifelse(str_starts(ICD10CDX, "F"), ICD10CDX, NA))  # Mark psychiatric conditions
 
-
-#Merge duplicate DUPERSID and make column that concatenates all psychiatric conditions  
+# Create h241_summary, ensuring only conditions starting with "F" are included in psych_conditions
 h241_summary <- h241_filtered %>%
   group_by(DUPERSID) %>%
   summarise(
-    psych_conditions_count = n(),
-    psych_conditions = paste(unique(ICD10CDX), collapse = ", ")  # Concatenate unique conditions
-  )
-
-h241_summary
+    psych_conditions_count = n(),  # Count psychiatric conditions per individual
+    psych_conditions = paste(unique(psych_codes), collapse = ", ")  # Concatenate unique psychiatric conditions
+  ) %>%
+  ungroup()  # Remove grouping structure
 
 #This summary concatenates all conditions and includes all conditions, not just psychiatric 
 h241_summary2 <- h241_selected %>%
   group_by(DUPERSID) %>%
   summarise(all_conditions = paste(unique(ICD10CDX), collapse = ", ")) # Concatenate unique conditions
 
-#Add new column psych_count that counts how many psychiatric illnesses one has
+# Merge with h241_summary2 using a left join
 h241_summary2 <- h241_summary2 %>%
-  mutate(psych_count = str_count(all_conditions, paste(psych_codes, collapse = "|")))
+  left_join(h241_summary, by = "DUPERSID")
 
 #Checking current status of dataframes
+h241_filtered
+h241_selected
 h241_summary
 h241_summary2
-h243_categorized
 
 duplicates <- h243_categorized %>%
   count(DUPERSID) %>%
