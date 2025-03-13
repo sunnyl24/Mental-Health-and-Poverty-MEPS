@@ -24,34 +24,34 @@ To complete this assessment:
 
 ## Basic information
 
-Name:
+Name: Sunny Lee
 
-CNetID:
+CNetID: snylee
 
-Section:
+Section: 2
 
-Research project title:
+Research project title: Insurance Level and Exposure to Psychiatric Drugs
 
-Submission date:
+Submission date: 2025-03-12
 
-Submission number (1-4):
+Submission number (1-4): 1
 
-Project GitHub repository URL:
+Project GitHub repository URL: https://github.com/sunnyl24/Mental-Health-and-Poverty-MEPS
 
-Filename of manuscript .qmd:
+Filename of manuscript .qmd: insurance-psychexposure.qmd
 
-Filename of knitted .pdf:
+Filename of knitted .pdf: insurance-psychexposure.html
 
 
 ## AI Statement
 
-Describe whether and how you used AI/LLMs when completing this project: 
+Describe whether and how you used AI/LLMs when completing this project:  I used it to clean up and get help with coding, especially with syntax when I wasn't sure where I was going wrong with my syntax that was causing errors in the code chunk. 
 
 Optionally (for engagement points) reflect on your use of AI:
 
+In this project, I supplemented my own knowledge with AI-powered tools to enhance various aspects of research, including data analysis, statistical modeling, and manuscript preparation. Importantly, I only incorporated AI assistance after thoroughly reviewing course materials, understanding best practices, and building a solid foundation in R and GitHub. This ensured that AI was used as a complementary tool rather than a crutch, allowing me to engage critically with the data and maintain control over my analytical decisions.
 
-
-
+AI-assisted tools streamlined repetitive coding tasks, improved visualization efficiency, and provided suggestions for refining my manuscript in adherence to APA formatting standards. However, I remained mindful of AI’s limitations, verifying all outputs against established statistical and methodological principles. This experience reinforced that while AI can significantly enhance productivity, it is most effective when paired with strong foundational knowledge and human oversight.
 
 ## Overall requirements
 
@@ -424,7 +424,10 @@ Optionally (for engagement points) write a brief reflection about your work on t
 - What did you learn from this project that you will carry forward to future projects?
 - What are you most proud of in this project?
 
-
+One of the most challenging aspects of this project was learning the foundational concepts of RStudio, Zotero, GitHub, and various R packages—all while adjusting to an entirely new workflow. Unlike the traditional methods I was familiar with, such as writing research papers in Word or managing data in Excel, this project required me to integrate multiple tools into a cohesive, reproducible research process. Initially, understanding how these components interconnected felt overwhelming, but gradually, I began to appreciate the advantages of this structured approach.
+The most rewarding aspect was being able to effectively explain my work to my parents and PI. Articulating my research process revealed how much knowledge I had actually gained throughout this class. Before these conversations, I hadn't fully recognized my own progress, but verbalizing my methods helped me appreciate the significant strides I had made in understanding data analysis and research workflows. Equally rewarding was discovering the efficiency of R—particularly when cleaning data and implementing dynamic in-line text, which eliminated tedious manual updates across multiple sections of my paper.
+If I were to start over, I would prioritize developing a consistent coding style and structured workflow from the beginning. Initially, my approach lacked coherence—I had no systematic method for organizing code, determining operational sequences, or implementing best practices. Establishing a clear structure early would have significantly enhanced my efficiency and reduced frustration.
+Through this project, I gained a deep appreciation for the importance of reproducibility, automation, and organization in research. Working with RStudio, managing citations through Zotero, and utilizing GitHub for version control has equipped me with valuable skills that I'll apply to future research endeavors. I now clearly see the advantages of integrated, programmatic approaches over traditional static, manual methods. What I'm most proud of is my ability to independently clean, analyze, and present data in a professional and reproducible manner. Although I have a lot more to learn and to polish my workflow and style and transitioning from familiar tools to this sophisticated research workflow was challenging, I feel like I have developed a strong foundation that will support my future work. This project has substantially boosted my confidence in tackling complex data analysis challenges, and I'm eager to apply these newly acquired skills in future research.
 Alternatively/additionally in mind some of the suggested ways to earn engagement points, and expand on this (or other aspects of your project) in your reflection:
 
 - Creating many figures and tables, or particularly complex or creative ones
@@ -433,7 +436,6 @@ Alternatively/additionally in mind some of the suggested ways to earn engagement
 - Making excellent use of markdown features to create a polished final product
 - Having a maximally reproducible and dynamic manuscript
 - Fully committing to best practices for version control and GitHub integration/organization
-
 
 
 
