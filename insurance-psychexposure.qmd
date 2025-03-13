@@ -11,7 +11,7 @@ author:
         city: Chicago
         region: IL
         postal-code: 60637
-abstract: "This is my abstract."
+abstract: "This study examines the relationship between insurance coverage and psychiatric drug exposure using data from the 2022 Medical Expenditure Panel Survey (MEPS). Given the increasing reliance on psychotropic medication for mental health treatment, understanding how insurance coverage influences access to these medications is crucial. We hypothesized that individuals with better insurance coverage would have higher psychiatric drug exposure. The primary findings from chi-square tests show that individuals with private or public insurance (Medicare or other) are almost twice as likely to be exposed to psychiatric drug prescriptions compared to their uninsured counterparts. This relationship remains significant across all income levels, except for the 'Near Poor' category, likely due to limitations in sample size rather than an actual lack of statistical significance. Logistic regression results reinforce these findings, showing that regardless of age or Medicare eligibility, insured individuals have approximately twice the odds of being prescribed psychiatric medication compared to those without insurance. These findings emphasize the critical role of insurance coverage in mitigating disparities in mental health treatment and highlight the need for policy interventions to improve psychiatric medication access for economically vulnerable populations."
 keywords: [MEPS, Medical Expenditure Panel Survey, Mental Health, Poverty, Prescribed Medicine, Psychiatric Drug, Drug Expenditure]
 author-note:
 disclosures:
@@ -190,6 +190,7 @@ colnames(table1) <- c("Variable", "No Exposure (%)", "Exposed (%)")
 ```{r}
 #| label: tbl-descriptive-stat
 #| tbl-cap: "Descriptive statistics by exposure to psychiatric drugs"
+#| apa-note: "Race and Income Level were all self-reported and categorized by MEPS standards"
 #| echo: false
 
 # Format the table with APA-style formatting
@@ -336,6 +337,7 @@ table3 <- flextable(subgroup_chisq) %>%
   bold(part = "header") %>%  # Make headers bold
   align(align = "center", part = "all") %>%  # Center align all content
   fontsize(size = 10, part = "all") %>%
+  add_footer_lines("Note. Some subgroups didn't have enough representation due to the nature of MEPS data.") %>%
   width(j = 2, width = 2) %>%  # Adjust X² column width
   width(j = 3, width = 2) %>%  # Adjust df column width
   autofit()
@@ -447,6 +449,7 @@ logit_table_under65 <- flextable(logit_results_under65) %>%
   align(j = 2:5, align = "center", part = "body") %>%  # Center-align OR, CI, p-values
   width(j = 2:5, width = 2.5) %>%
   autofit() %>%
+  add_footer_lines("Note. Reference group is <65 Uninsured (OR = 1.00).") %>%
   italic(j = 5, part = "body") %>%  # Italicize p-values (APA style)
   align(align = "left", part = "footer")  
 
@@ -537,6 +540,9 @@ logit_results_65plus2 <- logit_results_65plus2 %>%
   )) %>%
   arrange(factor(`Insurance Level`, levels = c("65+ without Medicare", "65+ with Medicare")))
 
+# Filter out the (Intercept) row before creating the table
+logit_results_65plus2 <- logit_results_65plus2 %>%
+  filter(`Insurance Level` != "(Intercept)")
 ```
 
 ```{r}
@@ -552,6 +558,7 @@ logit_table_65plus2 <- flextable(logit_results_65plus2) %>%
   align(j = 2:5, align = "center", part = "body") %>%  # Center-align OR, CI, p-values
   width(j = 2:5, width = 2.5) %>%
   autofit() %>%
+  add_footer_lines("Note. Reference group is 65+ Uninsured (OR = 1.00).") %>%
   italic(j = 5, part = "body") %>%  # Italicize p-values
   align(align = "left", part = "footer")
 
@@ -559,7 +566,7 @@ logit_table_65plus2 <- flextable(logit_results_65plus2) %>%
 logit_table_65plus2
 ```
 @tbl-log-reg-65over presents logistic regression results for the **65 over population**. 
-`r format_logit_results(logit_model3, "INSURC2265+ with Medicare", "65+ with Medicare")`. 
+`r format_logit_results(logit_model3, "INSURC2265+ with Medicare", "65+ with Medicare")`
 
 ## Psychiatric Drug Exposure by Insurance Level
 ```{r}
@@ -580,10 +587,11 @@ fig_facet <- clean_data %>%
   mutate(prop = count / sum(count))
 ```
 
+::: {.figure}
 ```{r}
 #| label: fig-facet
 #| fig-cap: "Exposure to psychiatric drugs by income level and insurance level"
-#| apa-note: "Income levels were designated by MEPS guidelines"
+#| apa-note: "Income levels were cut off by MEPS guidelines." 
 #| fig.width: 12
 #| fig.height: 8
 #| echo: false
@@ -607,8 +615,7 @@ theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1, size = 10),
 ```
 @fig-facet visualizes psychiatric drug exposure proportions by **insurance level** and **income group**. 
 
-Individuals with private/public insurance consistently had **higher psychiatric drug exposure** across all income levels except for the Near Poor group. Notably, psychiatric drug exposure was lowest among the **uninsured**, supporting the hypothesis that lack of insurance acts as a barrier to accessing psychiatric treatment.
-
+Individuals with private/public insurance consistently had higher psychiatric drug exposure across all income levels except for the Near Poor group. Notably, psychiatric drug exposure was lowest among the uninsured, supporting the hypothesis that lack of insurance acts as a barrier to accessing psychiatric treatment.
 
 ## Psychiatric Drug Exposure by Age Group
 ```{r}
@@ -652,10 +659,10 @@ fig_2 <- ggplot(clean_data2, aes(x = INSURC22, fill = as.factor(exposure_psych_d
        fill = "Psychiatric Drug Exposure") +
   scale_fill_manual(name = "Exposure to Psychiatric Drugs", values = c("#c6e6e3", "#cdb4da")) + 
   theme(axis.title.y = element_text(margin = margin(r = 10), size=12), # Add space between y-axis label and plot
-    axis.title.x = element_text(margin = margin(t = 15), size=12)) +  # Add space between x-axis label and plot) 
+    axis.title.x = element_text(margin = margin(r = 15), size=12)) +  # Add space between x-axis label and plot) 
   theme_minimal()
   
-print (fig_2)
+print(fig_2)
 ```
 @fig-psych-insurc is a stacked bar plot that visualizes psychiatric drug exposure proportions by **insurance level** using three Insurance Level groups. 
 
@@ -683,12 +690,12 @@ ggplot(clean_data2, aes(x = Age_Group, y = psych_drug_count, fill = SEX)) +
     axis.text.x = element_text(size = 10, vjust = 0.5),  # Adjust x-axis text
     axis.text.y = element_text(size = 10),  # Adjust y-axis text
     axis.title.y = element_text(margin = margin(r = 15), size = 12),  # Add space between y-axis label and plot
-    axis.title.x = element_text(margin = margin(t = 10), size = 12)  # Add space between x-axis label and plot
+    axis.title.x = element_text(margin = margin(r = 15), size = 12)  # Add space between x-axis label and plot
   )
 ```
 @fig-age-sex illustrates the distribution of **psychiatric drug prescriptions** by **age group** and **sex**. 
 
-Consistent with previous findings, **females** appear slightly more likely than males to receive psychiatric medications. While most individuals receive **0–2 psychiatric drugs**, a small subset receives a significantly higher number, indicating **potential polypharmacy** among certain individuals
+Consistent with previous findings, **females** appear slightly more likely than males to receive psychiatric medications, although the distribution between age and sex groups seem approximately similar. While most individuals receive **0–2 psychiatric drugs**, a small subset receives a significantly higher number.
 
 
 ## Age and Number of Psychiatric Diagnosis
@@ -714,10 +721,13 @@ ggplot(clean_data2, aes(x = AGE31X, y = psych_conditions_count, color = SEX)) +
     axis.text.x = element_text(size = 10, vjust = 0.5),  # Adjust x-axis text
     axis.text.y = element_text(size = 10),  # Adjust y-axis text
     axis.title.y = element_text(margin = margin(r = 15), size = 12),  # Add space between y-axis label and plot
-    axis.title.x = element_text(margin = margin(r = 10), size = 12)  # Add space between x-axis label and plot
+    axis.title.x = element_text(margin = margin(r = 15), size = 12)  # Add space between x-axis label and plot
   )
 ```
-@fig-age-psychcond displays the relationship between **age** and **number of psychiatric diagnoses**. 
+@fig-age-psychcond displays the relationship between both **age** and **sex** and the **number of psychiatric diagnoses**. 
 
-Across all ages, psychiatric diagnoses were most frequently **0 or 1**, suggesting that multiple diagnoses were uncommon in this population. The nearly flat regression line suggests that **age does not strongly predict the number of psychiatric diagnoses**.
+Across all ages, psychiatric diagnoses were most frequently **0 or 1**, suggesting that multiple diagnoses were uncommon in this population. The nearly flat regression line suggests that neither sex or age strongly predicts the number of psychiatric conditions.
 
+# Discussion
+
+The findings of this study highlight a strong association between insurance coverage and psychiatric drug exposure, reinforcing the idea that insurance plays a crucial role in mental health treatment access. @tbl-chi-square confirm that all covariates—age, sex, race/ethnicity, poverty level, and insurance status—are significantly related to psychiatric drug exposure, while logistic regression results in @tbl-log-reg-under65 and @tbl-log-reg-65over show that insured individuals, regardless of age or Medicare eligibility, are nearly twice as likely to receive psychiatric prescriptions as their uninsured counterparts. Notably, the "Near Poor" subgroup in @tbl-subgroup-analysis did not reach statistical significance, likely due to small sample size limitations rather than a true absence of association, a limitation that is also evident in @fig-facet, where data sparsity affects certain groups. @fig-psych-insurc visually confirms the logistic regression findings, showing that insured individuals consistently have higher psychiatric drug exposure. Further, @fig-age-sex suggests that while age and sex predict psychiatric drug exposure, they do not strongly influence the number of psychiatric prescriptions a person receives, while @fig-age-psychcond indicates that age and sex do not predict the number of psychiatric conditions a person has. These findings suggest that the association between age and psychiatric drug exposure is likely driven by treatment access rather than a higher prevalence of psychiatric conditions in older individuals. Despite these insights, this study is limited by sample size constraints and the cross-sectional nature of MEPS, which prevents causal inference. Future research should examine longitudinal trends in psychiatric drug access and explore how policy interventions, such as Medicaid expansion and cost-sharing reductions, can further mitigate disparities in psychiatric medication use.
