@@ -40,7 +40,7 @@ Project GitHub repository URL: https://github.com/sunnyl24/Mental-Health-and-Pov
 
 Filename of manuscript .qmd: insurance-psychexposure.qmd
 
-Filename of knitted .pdf: insurance-psychexposure.html
+Filename of knitted .pdf: Insurance Coverage and Psychiatric Drug Exposure.pdf
 
 
 ## AI Statement
